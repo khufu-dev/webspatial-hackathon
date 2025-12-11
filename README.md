@@ -17,7 +17,7 @@ npm run dev
 ```
 
 Runs on a local HTTPS server at:
-**[https://localhost:5173](https://localhost:5173)**
+**[https://localhost:5173/webspatial/avp/](https://localhost:5173/webspatial/avp/)**
 
 ### **Build for production**
 
@@ -29,6 +29,13 @@ npm run build
 
 ```bash
 npm run preview
+```
+
+### Run on Apple Vision Pro simulator
+
+```bash
+npm run dev
+npm run avp
 ```
 
 ### **Deploy to Vercel**

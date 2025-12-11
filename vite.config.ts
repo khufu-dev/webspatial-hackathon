@@ -6,9 +6,7 @@ import { createHtmlPlugin } from 'vite-plugin-html'
 export default defineConfig({
   plugins: [
     react(),
-    webspatial({
-      mode: process.env.XR_ENV === 'avp' ? 'avp' as const : undefined
-    }),
+    webspatial(),
     createHtmlPlugin({inject: { data: { XR_ENV: process.env.XR_ENV } }})
   ],
   server: { open: true }
