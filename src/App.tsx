@@ -9,8 +9,6 @@ function App() {
       <Routes>
         {/* Add a root route to prevent blank screen */}
         <Route path="/" element={<MainPage />} />
-
-        <Route path="/main" element={<MainPage />} />
         <Route path="/second-page" element={<SecondPage />} />
       </Routes>
     </BrowserRouter>

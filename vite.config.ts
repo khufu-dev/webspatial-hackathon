@@ -4,7 +4,6 @@ import webspatial from "@webspatial/vite-plugin";
 import { createHtmlPlugin } from "vite-plugin-html";
 
 export default defineConfig({
-  base: "/",
   plugins: [
     react(),
     webspatial(),
