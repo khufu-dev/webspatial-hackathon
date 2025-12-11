@@ -1,0 +1,30 @@
+{
+  "name": "my-spatial-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.2",
+    "@webspatial/core-sdk": "^1.0.5",
+    "@webspatial/react-sdk": "^1.0.5",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.1"
+  },
+  "devDependencies": {
+    "@webspatial/builder": "^1.0.5",
+    "@webspatial/platform-visionos": "^1.0.5",
+    "@webspatial/vite-plugin": "^0.2.1",
+    "vite-plugin-html": "^3.2.2",
+    "vite-plugin-mkcert": "^1.17.9"
+  }
+}
