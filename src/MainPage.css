@@ -181,18 +181,18 @@
 }
 
 /* Footer */
-.footer {
+footer {
   margin-top: 2rem;
   text-align: center;
   color: #888;
   font-size: 0.9rem;
 }
 
-.footer a {
+footer a {
   color: #667eea;
   text-decoration: none;
 }
 
-.footer a:hover {
+footer a:hover {
   text-decoration: underline;
 }

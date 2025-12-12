@@ -22,18 +22,12 @@ export default function MainPage() {
             <Cart />
           </aside>
         </main>
-
-        <footer className="footer">
+        <footer>
           <p>
             Built with{" "}
-            <a
-              href="https://webspatial.dev"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href="https://webspatial.dev" target="_blank" rel="noopener noreferrer">
               WebSpatial
-            </a>{" "}
-            + React
+            </a> + React
           </p>
         </footer>
       </div>
