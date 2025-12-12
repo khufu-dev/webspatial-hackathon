@@ -1,8 +1,7 @@
-import { Link } from "react-router-dom";
 import { Cart } from "./components/Cart";
 import { ProductList } from "./components/ProductList";
 import { CartProvider } from "./context/CartContext";
-import "./MainPage.css";
+import "./App.css";
 
 export default function MainPage() {
   return (
@@ -23,6 +22,7 @@ export default function MainPage() {
             <Cart />
           </aside>
         </main>
+
         <div className="card" style={{ marginTop: "0px" }}>
           <p>
             <button
