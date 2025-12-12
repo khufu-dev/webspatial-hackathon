@@ -53,34 +53,42 @@ export default function ProductPage() {
         <h1 className="product-name" style={{ marginTop: "1rem" }}>
           {product.name}
         </h1>
-        <Model
-          id={product.model}
-        />
+
         {
-          //<Reality style={{ width: "500px", height: "500px", "--xr-depth": 100 }}>
-          //  <UnlitMaterial id="red" color="#ff0000" />
-          //  <ModelAsset
-          //    id={product.model}
-          //    src={`${import.meta.env.BASE_URL}${product.model}`}
-          //  />
-          //  <SceneGraph>
-          //    <ModelEntity
-          //      model={product.model}
-          //      position={{ x: 0.0, y: -0.05, z: 0.1 }}
-          //      scale={{ x: 0.2, y: 0.2, z: 0.2 }}
-          //      rotation={rotation}
-          //    />
-          //    {
-          //      //  <BoxEntity
-          //      //  materials={["red"]}
-          //      //  width={0.1}
-          //      //  height={0.2}
-          //      //  depth={0.1}
-          //      //  rotation={rotation}
-          //      ///>
-          //    }
-          //  </SceneGraph>
-          //</Reality>
+          //<Model
+          //  src={`${import.meta.env.BASE_URL}${product.model}`}
+          ///>
+        }
+        {
+          <Reality
+            style={{ width: "500px", height: "500px", "--xr-depth": 100 }}
+          >
+            <UnlitMaterial id="red" color="#ff0000" />
+            <ModelAsset
+              id={product.model}
+              src={`${import.meta.env.BASE_URL}${product.model}`}
+            />
+            <SceneGraph>
+              <ModelEntity
+                model={product.model}
+                //position={{ x: 0.0, y: -0.05, z: 0.1 }}
+                position={product.position}
+                scale={product.scale}
+                rotation={product.rotation}
+              //scale={{ x: 0.2, y: 0.2, z: 0.2 }}
+              //rotation={rotation}
+              />
+              {
+                //  <BoxEntity
+                //  materials={["red"]}
+                //  width={0.1}
+                //  height={0.2}
+                //  depth={0.1}
+                //  rotation={rotation}
+                ///>
+              }
+            </SceneGraph>
+          </Reality>
         }
         <p className="product-price">
           ${product.price.toFixed(2)}
