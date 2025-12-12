@@ -2,8 +2,9 @@ import { Link } from "react-router-dom";
 import { Cart } from "./components/Cart";
 import { ProductList } from "./components/ProductList";
 import { CartProvider } from "./context/CartContext";
+import "./MainPage.css";
 
-export function MainPage() {
+export default function MainPage() {
   return (
     <CartProvider>
       <div className="app">
@@ -33,6 +34,7 @@ export function MainPage() {
             </button>
           </p>
         </div>
+
         <footer className="footer">
           <p>
             Built with{" "}

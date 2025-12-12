@@ -33,6 +33,12 @@ npm run preview
 
 ### Run on Apple Vision Pro simulator
 
+The first time run
+```bash
+npm run build
+```
+
+Then run development server and the Vision Pro simulator
 ```bash
 npm run dev
 npm run avp
