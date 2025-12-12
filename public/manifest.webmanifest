@@ -2,6 +2,7 @@
   "name": "WebSpatial Hackathon",
   "short_name": "Hackathon",
   "start_url": "/webspatial/avp/",
+  "display": "minimal-ui",
   "icons": [
     {
       "src": "/icon-48.png",
