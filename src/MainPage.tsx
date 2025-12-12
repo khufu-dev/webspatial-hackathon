@@ -1,7 +1,7 @@
 import { Cart } from "./components/Cart";
 import { ProductList } from "./components/ProductList";
 import { CartProvider } from "./context/CartContext";
-import "./MainPage.css"
+import "./App.css";
 
 export default function MainPage() {
   return (
@@ -22,12 +22,30 @@ export default function MainPage() {
             <Cart />
           </aside>
         </main>
-        <footer>
+
+        <div className="card" style={{ marginTop: "0px" }}>
+          <p>
+            <button
+              onClick={() => {
+                window.open(`${__XR_ENV_BASE__}second-page`, "secondScene");
+              }}
+            >
+              Open Second Page with a Button
+            </button>
+          </p>
+        </div>
+
+        <footer className="footer">
           <p>
             Built with{" "}
-            <a href="https://webspatial.dev" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://webspatial.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               WebSpatial
-            </a> + React
+            </a>{" "}
+            + React
           </p>
         </footer>
       </div>
