@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { Cart } from "./components/Cart";
 import { ProductList } from "./components/ProductList";
 import { CartProvider } from "./context/CartContext";
@@ -22,17 +21,19 @@ export function MainPage() {
             <Cart />
           </aside>
         </main>
-        <div className="card" style={{ marginTop: "0px" }}>
-          <p>
-            <button
-              onClick={() => {
-                window.open(`${__XR_ENV_BASE__}second-page`, "secondScene");
-              }}
-            >
-              Open Second Page with a Button
-            </button>
-          </p>
-        </div>
+        {
+          // <div className="card" style={{ marginTop: "0px" }}>
+          //   <p>
+          //     <button
+          //       onClick={() => {
+          //         window.open(`${__XR_ENV_BASE__}second-page`, "secondScene");
+          //       }}
+          //     >
+          //       Open Second Page with a Button
+          //     </button>
+          //   </p>
+          // </div>
+        }
         <footer className="footer">
           <p>
             Built with{" "}

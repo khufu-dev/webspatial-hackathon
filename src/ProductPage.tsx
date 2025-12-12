@@ -10,6 +10,7 @@ import {
   UnlitMaterial,
 } from "@webspatial/react-sdk";
 import { useEffect, useState } from "react";
+import { CartProvider, useCart } from "./context/CartContext";
 
 export default function ProductPage() {
   const { id } = useParams<{ id: string }>();
@@ -40,20 +41,39 @@ export default function ProductPage() {
 
   return (
     <div className="app">
-      <div style={{ maxWidth: 720, margin: "0 auto" }}>
+      <div
+        style={{
+          maxWidth: 720,
+          margin: "10 auto",
+          padding: "1rem",
+          backgroundColor: "white",
+        }}
+      >
         <h1 className="product-name" style={{ marginTop: "1rem" }}>
           {product.name}
         </h1>
         <Reality style={{ width: "500px", height: "500px", "--xr-depth": 100 }}>
           <UnlitMaterial id="red" color="#ff0000" />
+          <ModelAsset
+            id="mainModel"
+            src={`${import.meta.env.BASE_URL}vehicle-speedster.usdz`}
+          />
           <SceneGraph>
-            <BoxEntity
-              materials={["red"]}
-              width={0.1}
-              height={0.2}
-              depth={0.1}
+            <ModelEntity
+              model="mainModel"
+              position={{ x: 0.0, y: 0.0, z: 0.0 }}
+              scale={{ x: 0.1, y: 0.1, z: 0.1 }}
               rotation={rotation}
             />
+            {
+              //  <BoxEntity
+              //  materials={["red"]}
+              //  width={0.1}
+              //  height={0.2}
+              //  depth={0.1}
+              //  rotation={rotation}
+              ///>
+            }
           </SceneGraph>
         </Reality>
         <p className="product-price">
@@ -62,7 +82,6 @@ export default function ProductPage() {
 
         <h2 style={{ marginTop: "1rem" }}>Description</h2>
         <p className="product-description">{product.description}</p>
-
         <div style={{ marginTop: "1.5rem" }}>
           <Link to="/">Back to Store</Link>
         </div>

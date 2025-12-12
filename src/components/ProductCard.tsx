@@ -1,5 +1,6 @@
 import { Product } from "../types";
-import { useCart } from "../context/CartContext";
+import { Link } from "react-router-dom";
+import { AddToCart } from "./AddToCart";
 
 interface ProductCardProps {
   product: Product;
@@ -10,20 +11,23 @@ function gotoPage(product: string) {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const { addToCart } = useCart();
-
   return (
     <div className="product-card">
       <img src={product.image} alt={product.name} className="product-image" />
       <h3 className="product-name">{product.name}</h3>
       <p className="product-description">{product.description}</p>
       <p className="product-price">${product.price.toFixed(2)}</p>
-      <button onClick={() => gotoPage(product.id)} className="add-to-cart-btn">
+      <Link to={"product/" + product.id} className="add-to-cart-btn">
         Go to product
-      </button>
-      <button onClick={() => addToCart(product)} className="add-to-cart-btn">
-        Add to Cart
-      </button>
+      </Link>
+      {
+        //  <button onClick={() => gotoPage(product.id)} className="add-to-cart-btn">
+        //  Go to product
+        //</button>
+      }
+      <div style={{ marginTop: "1.5rem" }}>
+        <AddToCart product={product.id} />
+      </div>
     </div>
   );
 }
