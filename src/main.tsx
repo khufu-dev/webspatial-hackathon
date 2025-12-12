@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App'
+import MainPage from './MainPage'
 
 // Enable spatial window styling
 const html = document.documentElement;
@@ -11,6 +11,6 @@ html.style.backgroundColor = 'transparent';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <MainPage />
   </StrictMode>,
 )
