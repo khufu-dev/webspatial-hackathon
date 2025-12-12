@@ -1,0 +1,23 @@
+{
+  "folders":
+  [
+    {
+      "path": "../",
+      "folder_exclude_patterns": [
+        "dist",
+        "node_modules",
+      ],
+    }
+  ],
+  "settings":
+  {
+    "LSP":
+    {
+      "LSP-typescript":
+      {
+        "enabled": true
+      }
+    },
+    "lsp_format_on_save": true
+  },
+}

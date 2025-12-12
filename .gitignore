@@ -8,5 +8,5 @@ node_modules/
 dist/
 
 # Ignore IDE project files
-sublime/
+*.sublime-workspace
 .DS_Store
