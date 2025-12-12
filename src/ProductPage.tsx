@@ -56,13 +56,13 @@ export default function ProductPage() {
           <UnlitMaterial id="red" color="#ff0000" />
           <ModelAsset
             id="mainModel"
-            src={`${import.meta.env.BASE_URL}vehicle-speedster.usdz`}
+            src={`${import.meta.env.BASE_URL}${product.model}`}
           />
           <SceneGraph>
             <ModelEntity
               model="mainModel"
-              position={{ x: 0.0, y: 0.0, z: 0.0 }}
-              scale={{ x: 0.1, y: 0.1, z: 0.1 }}
+              position={{ x: 0.0, y: -0.05, z: 0.1 }}
+              scale={{ x: 0.2, y: 0.2, z: 0.2 }}
               rotation={rotation}
             />
             {
