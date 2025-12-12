@@ -23,12 +23,6 @@ export function MainPage() {
           </aside>
         </main>
         <div className="card" style={{ marginTop: "0px" }}>
-          <h2>Open Second Page</h2>
-          <p>
-            <Link to="/second-page" target="_blank">
-              Open Second Page with a Link
-            </Link>
-          </p>
           <p>
             <button
               onClick={() => {
