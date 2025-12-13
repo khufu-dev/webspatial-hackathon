@@ -36,17 +36,20 @@ export function ProductCard({ product }: ProductCardProps) {
       <h3 className="product-name">{product.name}</h3>
       <p className="product-description">{product.description}</p>
       <p className="product-price">${product.price.toFixed(2)}</p>
-      <Link to={"product/" + product.id} className="add-to-cart-btn">
-        Go to product
-      </Link>
-      {
-        //  <button onClick={() => gotoPage(product.id)} className="add-to-cart-btn">
-        //  Go to product
-        //</button>
-      }
-      <div style={{ marginTop: "1.5rem" }}>
-        <AddToCart product={product.id} />
+      <div className="product-card-footer">
+        <Link
+          to={`/product/${product.id}`}
+          style={{ textDecoration: "none" }}
+          className="add-to-cart-btn"
+        >
+          Go to product
+        </Link>
       </div>
+      {
+        //<div style={{ marginTop: "1.5rem" }}>
+        //  <AddToCart product={product.id} />
+        //</div>
+      }
     </div>
   );
 }

@@ -9,18 +9,16 @@ export default function MainPage() {
       <div className="app">
         <header className="header">
           <h1>WebSpatial Store</h1>
-          <p className="subtitle">Shop in immersive spatial reality</p>
+          <p className="subtitle" style={{ color: "#CCCCCC" }}>
+            Shop in immersive spatial reality
+          </p>
         </header>
 
         <main className="main">
           <section className="products-section">
-            <h2>Products</h2>
+            <h2 style={{ color: "white" }}>Products</h2>
             <ProductList />
           </section>
-
-          <aside className="cart-section">
-            <Cart />
-          </aside>
         </main>
 
         <div className="card" style={{ marginTop: "0px" }}>

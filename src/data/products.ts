@@ -1,7 +1,7 @@
 import { Product } from "../types";
 import { Vec3 } from "@webspatial/core-sdk";
 
-const defaultPos: Vec3 = { x: 0.04, y: -0.04, z: 0 };
+const defaultPos: Vec3 = { x: 0.02, y: -0.04, z: 0 };
 const defaultRot: Vec3 = { x: 0, y: 0, z: 0 };
 const defaultScale: Vec3 = { x: 0.1, y: 0.1, z: 0.1 };
 
@@ -54,9 +54,9 @@ export const products: Product[] = [
     image: "/icon-512.png",
     description: "Prototype SEGA console concept.",
     model: "usdz/SEGA_Pluto.usdz",
-    position: { ...defaultPos, z: 0.02 },
+    position: { ...defaultPos, y: 0.0, z: 0.02 },
     scale: getScale(0.015),
-    rotation: defaultRot,
+    rotation: get3(45, 0, 0),
   },
   {
     id: "9",
@@ -88,7 +88,7 @@ export const products: Product[] = [
     description: "Futuristic controller concept for 2025.",
     model: "usdz/Steam_Controller_2025_GabeCube.usdz",
     position: { ...defaultPos, y: 0 },
-    scale: defaultScale,
+    scale: getScale(0.08),
     rotation: defaultRot,
   },
   {
