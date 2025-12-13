@@ -38,11 +38,6 @@ export function ProductCard({ product }: ProductCardProps) {
           Go to product
         </Link>
       </div>
-      {
-        //<div style={{ marginTop: "1.5rem" }}>
-        //  <AddToCart product={product.id} />
-        //</div>
-      }
     </div>
   );
 }
