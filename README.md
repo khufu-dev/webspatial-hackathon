@@ -1,6 +1,6 @@
-# WebSpatial XR App
+# WebSpatial Hackathon
 
-A **WebSpatial** application for **Apple Vision Pro** and other XR devices, built with **React**, **TypeScript**, and **Vite**.
+A WebSpatial Hackathon application for **Apple Vision Pro** and other XR devices, built with **React**, **TypeScript**, and **Vite**. This was built for the December 2025 Hackathon.
 
 ##  Getting Started
 
