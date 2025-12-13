@@ -54,27 +54,6 @@ Or connect your GitHub repository to Vercel for automatic deployments.
 
 ---
 
-## 📂 Project Structure
-
-```
-├── src/
-│   ├── main.tsx                # App entry point with spatial setup
-│   ├── App.tsx                 # Main application component
-│   ├── App.css                 # Component styles
-│   ├── index.css               # Global styles
-│   └── utils/
-│       └── xr.ts               # XR scene utilities
-├── public/
-│   └── manifest.webmanifest    # PWA + XR configuration
-├── index.html
-├── vite.config.ts
-├── tsconfig.json
-└── vercel.json
-```
-
-
----
-
 ## Resources
 
 * **WebSpatial Documentation**
