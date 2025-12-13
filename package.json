@@ -24,6 +24,7 @@
     "vite": "^6.4.1"
   },
   "devDependencies": {
+    "@types/node": "^25.0.1",
     "@webspatial/builder": "^1.0.5",
     "@webspatial/platform-visionos": "^1.0.5",
     "@webspatial/vite-plugin": "^0.2.1",
