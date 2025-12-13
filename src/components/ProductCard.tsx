@@ -1,6 +1,5 @@
 import { Product } from "../types";
 import { Link } from "react-router-dom";
-import { AddToCart } from "./AddToCart";
 import {
   ModelAsset,
   ModelEntity,
@@ -11,10 +10,6 @@ import {
 interface ProductCardProps {
   product: Product;
 }
-
-//function gotoPage(product: string) {
-//  window.open(`${__XR_ENV_BASE__}product/` + product, "product/" + product);
-//}
 
 export function ProductCard({ product }: ProductCardProps) {
   return (

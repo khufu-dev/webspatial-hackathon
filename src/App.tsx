@@ -3,6 +3,8 @@ import "./App.css";
 import MainPage from "./MainPage";
 import ProductPage from "./ProductPage";
 
+declare const __XR_ENV_BASE__: string | undefined;
+
 function App() {
   return (
     <BrowserRouter basename={__XR_ENV_BASE__}>

@@ -1,7 +1,8 @@
-import { Cart } from "./components/Cart";
 import { ProductList } from "./components/ProductList";
 import { CartProvider } from "./context/CartContext";
 import "./App.css";
+
+declare const __XR_ENV_BASE__: string | undefined;
 
 export default function MainPage() {
   return (

@@ -2,17 +2,13 @@ import { Link, useParams } from "react-router-dom";
 import { products } from "./data/products";
 import "./App.css";
 import {
-  BoxEntity,
-  Model,
   ModelAsset,
   ModelEntity,
   Reality,
   SceneGraph,
   UnlitMaterial,
-  Vec3,
 } from "@webspatial/react-sdk";
 import { useEffect, useState } from "react";
-import { CartProvider, useCart } from "./context/CartContext";
 import { Product } from "./types/index.ts";
 
 export default function ProductPage() {
