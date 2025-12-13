@@ -1,4 +1,3 @@
-import { Product } from "../types";
 import { Vec3 } from "@webspatial/core-sdk";
 
 const defaultPos: Vec3 = { x: 0.02, y: -0.04, z: 0 };
@@ -13,7 +12,7 @@ const get3 = (x: number, y: number, z: number) => {
   return { x: x, y: y, z: z };
 };
 
-export const products: Product[] = [
+export const products = [
   {
     id: "5",
     name: "Multimeter",
@@ -190,4 +189,6 @@ export const products: Product[] = [
     scale: defaultScale,
     rotation: get3(0, 230, 0),
   },
-];
+] as const;
+
+export type Product = typeof products[any]

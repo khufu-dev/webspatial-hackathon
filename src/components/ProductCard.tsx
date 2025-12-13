@@ -1,4 +1,3 @@
-import { Product } from "../types";
 import { Link } from "react-router-dom";
 import {
   ModelAsset,
@@ -6,6 +5,7 @@ import {
   Reality,
   SceneGraph,
 } from "@webspatial/react-sdk";
+import { Product } from "../data/products";
 
 interface ProductCardProps {
   product: Product;

@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { products } from "./data/products";
+import { products, Product } from "./data/products";
 import "./ProductPage.css";
 import {
   ModelAsset,
@@ -9,7 +9,6 @@ import {
   UnlitMaterial,
 } from "@webspatial/react-sdk";
 import { useEffect, useState } from "react";
-import { Product } from "./types/index.ts";
 
 export default function ProductPage() {
   const { id } = useParams<{ id: string }>();
