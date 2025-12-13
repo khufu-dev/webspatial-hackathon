@@ -27,9 +27,9 @@ export function ProductCard({ product }: ProductCardProps) {
         <SceneGraph>
           <ModelEntity
             model={product.model}
-            position={{ x: 0.05, y: -0.0, z: 0.0 }}
-            scale={{ x: 0.1, y: 0.1, z: 0.1 }}
-            rotation={{ x: 0, y: 270, z: 0 }}
+            position={product.position}
+            scale={product.scale}
+            rotation={product.rotation}
           />
         </SceneGraph>
       </Reality>
