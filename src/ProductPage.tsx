@@ -72,7 +72,11 @@ export default function ProductPage() {
                 model={product.model}
                 //position={{ x: 0.0, y: -0.05, z: 0.1 }}
                 position={product.position}
-                scale={product.scale}
+                scale={{
+                  x: product.scale.x * 2,
+                  y: product.scale.y * 2,
+                  z: product.scale.z * 2,
+                }}
                 rotation={product.rotation}
               //scale={{ x: 0.2, y: 0.2, z: 0.2 }}
               //rotation={rotation}
