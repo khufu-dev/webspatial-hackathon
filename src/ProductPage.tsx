@@ -9,13 +9,15 @@ import {
   Reality,
   SceneGraph,
   UnlitMaterial,
+  Vec3,
 } from "@webspatial/react-sdk";
 import { useEffect, useState } from "react";
 import { CartProvider, useCart } from "./context/CartContext";
+import { Product } from "./types/index.ts";
 
 export default function ProductPage() {
   const { id } = useParams<{ id: string }>();
-  const product = products.find((p) => p.id === id);
+  const product: Product | undefined = products.find((p) => p.id === id);
 
   if (!product) {
     return (
@@ -77,7 +79,11 @@ export default function ProductPage() {
                   y: product.scale.y * 2,
                   z: product.scale.z * 2,
                 }}
-                rotation={product.rotation}
+                rotation={{
+                  x: product.rotation.x,
+                  y: product.rotation.y + rotation.y,
+                  z: product.rotation.z,
+                }}
               //scale={{ x: 0.2, y: 0.2, z: 0.2 }}
               //rotation={rotation}
               />
