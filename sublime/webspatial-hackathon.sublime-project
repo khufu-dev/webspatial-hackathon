@@ -15,9 +15,9 @@
     {
       "LSP-typescript":
       {
-        "enabled": true
-      }
+        "enabled": true,
+      },
     },
-    "lsp_format_on_save": true
+    "lsp_format_on_save": true,
   },
 }
