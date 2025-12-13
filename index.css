@@ -4,6 +4,10 @@ html {
     Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   color: CanvasText;
   color-scheme: light dark;
+}
+
+html.isSpatial {
+  color: Canvas;
   background-color: transparent;
   --xr-background-material: translucent;
 }

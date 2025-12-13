@@ -34,8 +34,6 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className="product-card-footer">
         <Link
           to={`/product/${product.id}`}
-          style={{ textDecoration: "none" }}
-          className="add-to-cart-btn"
         >
           Go to product
         </Link>
