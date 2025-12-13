@@ -1,38 +1,26 @@
 import { ProductList } from "./components/ProductList";
 import { CartProvider } from "./context/CartContext";
-import "./App.css";
+import "./MainPage.css";
 
 declare const __XR_ENV_BASE__: string | undefined;
 
 export default function MainPage() {
   return (
     <CartProvider>
-      <div className="app">
+      <div className="mainPage">
         <header className="header">
           <h1>WebSpatial Store</h1>
-          <p className="subtitle" style={{ color: "#CCCCCC" }}>
+          <p className="subtitle">
             Shop in immersive spatial reality
           </p>
         </header>
 
         <main className="main">
           <section className="products-section">
-            <h2 style={{ color: "white" }}>Products</h2>
+            <h2>Products</h2>
             <ProductList />
           </section>
         </main>
-
-        <div className="card" style={{ marginTop: "0px" }}>
-          <p>
-            <button
-              onClick={() => {
-                window.open(`${__XR_ENV_BASE__}second-page`, "secondScene");
-              }}
-            >
-              Open Second Page with a Button
-            </button>
-          </p>
-        </div>
 
         <footer className="footer">
           <p>

@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { products } from "./data/products";
-import "./App.css";
+import "./ProductPage.css";
 import {
   ModelAsset,
   ModelEntity,
@@ -39,7 +39,7 @@ export default function ProductPage() {
   //const modelUrl = (product as any).modelUrl as string | undefined;
 
   return (
-    <div className="app">
+    <div className="productPage">
       <div
         style={{
           maxWidth: 720,

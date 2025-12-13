@@ -1,11 +1,10 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./App.css";
 import MainPage from "./MainPage";
 import ProductPage from "./ProductPage";
 
 declare const __XR_ENV_BASE__: string | undefined;
 
-function App() {
+export default function App() {
   return (
     <BrowserRouter basename={__XR_ENV_BASE__}>
       <Routes>
@@ -15,4 +14,3 @@ function App() {
     </BrowserRouter>
   );
 }
-export default App;
