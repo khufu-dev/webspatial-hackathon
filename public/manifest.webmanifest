@@ -2,7 +2,8 @@
   "name": "WebSpatial Hackathon",
   "short_name": "Hackathon",
   "start_url": "/",
-  "display": "minimal-ui",
+  "scope": "/",
+  "display": "standalone",
   "icons": [
     {
       "src": "/icon-48.png",
