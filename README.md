@@ -1,8 +1,6 @@
 # WebSpatial Hackathon
 
-[WebSpatial Production](https://webspatial-hackathon.vercel.app/webspatial/avp/)
-
-[Web Production](https://webspatial-hackathon.vercel.app)
+[WebSpatial Production](https://webspatial-hackathon.vercel.app)
 
 A WebSpatial Hackathon application for **Apple Vision Pro** and other XR devices, built with **React**, **TypeScript**, and **Vite**. This was built for the December 2025 Hackathon.
 
