@@ -3,7 +3,7 @@
   "short_name": "Hackathon",
   "start_url": "/",
   "scope": "/",
-  "display": "standalone",
+  "display": "minimal-ui",
   "icons": [
     {
       "src": "/icon-48.png",
