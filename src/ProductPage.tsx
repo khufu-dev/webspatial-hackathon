@@ -39,15 +39,8 @@ export default function ProductPage() {
 
   return (
     <div className="productPage">
-      <div
-        style={{
-          maxWidth: 720,
-          margin: "10 auto",
-          padding: "1rem",
-          backgroundColor: "white",
-        }}
-      >
-        <h1 className="product-name" style={{ marginTop: "1rem" }}>
+      <div>
+        <h1 className="product-name">
           {product.name}
         </h1>
         {
@@ -94,15 +87,12 @@ export default function ProductPage() {
             </SceneGraph>
           </Reality>
         }
-        <p className="product-price">
-          ${product.price.toFixed(2)}
-        </p>
-
-        <h2 style={{ marginTop: "1rem" }}>Description</h2>
-        <p className="product-description">{product.description}</p>
-        <div style={{ marginTop: "1.5rem" }}>
-          <Link to="/">Back to Store</Link>
-        </div>
+        <article className="description">
+          <h2>Description</h2>
+          <p className="product-description">{product.description}</p>
+          <p className="product-price">${product.price.toFixed(2)}</p>
+          <p><Link to="/">Back to Store</Link></p>
+        </article>
       </div>
     </div>
   );
