@@ -6,6 +6,7 @@ import {
   SceneGraph,
 } from "@webspatial/react-sdk";
 import { Product } from "../data/products";
+import "./ProductCart.css";
 
 interface ProductCardProps {
   product: Product;
