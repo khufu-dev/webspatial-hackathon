@@ -61,7 +61,7 @@ export default function ProductPage() {
               <ModelEntity
                 model={product.model}
                 //position={{ x: 0.0, y: -0.05, z: 0.1 }}
-                position={product.position}
+                position={{ ...product.position, z: product.position.z + 0.1 }}
                 scale={{
                   x: product.scale.x * 2,
                   y: product.scale.y * 2,
