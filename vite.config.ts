@@ -9,5 +9,5 @@ export default defineConfig({
     webspatial({ outputDir: "/" }),
     createHtmlPlugin({ inject: { data: { XR_ENV: process.env.XR_ENV } } }),
   ],
-  server: { open: true },
+  server: { open: true, host: true },
 });

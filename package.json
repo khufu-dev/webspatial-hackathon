@@ -7,7 +7,7 @@
     "dev": "XR_ENV=avp vite",
     "build": "tsc -b && XR_ENV=avp vite build",
     "lint": "eslint .",
-    "preview": "vite preview --port 5173",
+    "preview": "vite preview --host --port 5173",
     "avp": "webspatial-builder run --base=http://localhost:5173"
   },
   "dependencies": {
