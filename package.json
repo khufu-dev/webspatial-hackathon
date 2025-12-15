@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "XR_ENV=avp vite",
     "build": "tsc -b && XR_ENV=avp vite build",
-    "preview": "vite preview --host --port 5173",
+    "preview": "npm run build && vite preview --host --port 5173",
     "avp": "npm run build && webspatial-builder run --base=http://localhost:5173"
   },
   "dependencies": {
