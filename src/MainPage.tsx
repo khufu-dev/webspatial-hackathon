@@ -1,8 +1,6 @@
 import { ProductList } from "./components/ProductList";
 import "./MainPage.css";
 
-declare const __XR_ENV_BASE__: string | undefined;
-
 export default function MainPage() {
   return (
     <div className="mainPage">
