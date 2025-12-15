@@ -1,4 +1,5 @@
-import { ProductList } from "./components/ProductList";
+import { products } from './data/products';
+import { ProductCard } from './components/ProductCard';
 import "./MainPage.css";
 
 export default function MainPage() {
@@ -14,7 +15,11 @@ export default function MainPage() {
       <main className="main">
         <section className="products-section">
           <h2>Products</h2>
-          <ProductList />
+          <div className="product-list">
+            {products.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
         </section>
       </main>
 
