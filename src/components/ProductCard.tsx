@@ -32,9 +32,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <p className="product-description">{product.description}</p>
       <p className="product-price">${product.price.toFixed(2)}</p>
       <div className="product-card-footer">
-        <Link
-          to={`/product/${product.id}`}
-        >
+        <Link to={`/product/${product.id}`}>
           Go to product
         </Link>
       </div>

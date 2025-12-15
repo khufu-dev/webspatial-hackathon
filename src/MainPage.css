@@ -35,11 +35,6 @@
     margin-bottom: 1rem;
   }
 
-  .cart-section {
-    width: 300px;
-    flex-shrink: 0;
-  }
-
   /* Product List */
   .product-list {
     display: grid;
