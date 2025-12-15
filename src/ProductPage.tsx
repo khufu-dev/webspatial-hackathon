@@ -50,7 +50,7 @@ export default function ProductPage() {
         }
         {
           <Reality
-            style={{ width: "500px", height: "500px", "--xr-depth": 100 }}
+            style={{ width: "500px", height: "450px", "--xr-depth": 100 }}
           >
             <UnlitMaterial id="red" color="#ff0000" />
             <ModelAsset
