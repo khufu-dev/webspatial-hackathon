@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import {
+  Model,
   ModelAsset,
   ModelEntity,
   Reality,
@@ -37,6 +38,10 @@ type Model3DProps = {
   className?: string
 }
 function Model3D({ className, src, position, scale, rotation }: Model3DProps) {
+  // Check if HTML model tag is supported
+  const modelSupported = !(document.createElement("model") instanceof HTMLUnknownElement);
+
+  if (modelSupported) return <Model src={src} className={className} />;
   return (
     <Reality className={className}>
       <ModelAsset id={src} src={src} />
