@@ -45,7 +45,7 @@ export default function ProductPage() {
         </h1>
         {
           //<Model
-          //  src={`${import.meta.env.BASE_URL}${product.model}`}
+          //  src={product.model}
           ///>
         }
         {
@@ -55,7 +55,7 @@ export default function ProductPage() {
             <UnlitMaterial id="red" color="#ff0000" />
             <ModelAsset
               id={product.model}
-              src={`${import.meta.env.BASE_URL}${product.model}`}
+              src={product.model}
             />
             <SceneGraph>
               <ModelEntity
