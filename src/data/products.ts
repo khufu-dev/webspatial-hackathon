@@ -1,6 +1,6 @@
 import { Vec3 } from "@webspatial/core-sdk";
 
-const defaultPos: Vec3 = { x: 0.02, y: -0.04, z: 0 };
+const defaultPos: Vec3 = { x: 0.0, y: -0.04, z: 0 };
 const defaultRot: Vec3 = { x: 0, y: 0, z: 0 };
 const defaultScale: Vec3 = { x: 0.1, y: 0.1, z: 0.1 };
 

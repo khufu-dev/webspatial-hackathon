@@ -30,7 +30,7 @@
   }
 
   .product-3D{
-    width: 100px;
+    width: 100%;
     height: 200px;
     --xr-depth: 100px;
   }
