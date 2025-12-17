@@ -18,7 +18,7 @@ export default function Model3D({ className, src, position, scale, rotation }: M
   // Check if HTML model tag is supported
   const modelSupported = !(document.createElement("model") instanceof HTMLUnknownElement);
 
-  if (modelSupported) return <Model src={src} className={className} />;
+  if (modelSupported) return <Model src={src} className={className} enable-xr />;
   return (
     <Reality className={className}>
       <ModelAsset id={src} src={src} />
