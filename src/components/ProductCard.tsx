@@ -1,12 +1,5 @@
 import { Link } from "react-router-dom";
-import {
-  Model,
-  ModelAsset,
-  ModelEntity,
-  Reality,
-  SceneGraph,
-  Vec3,
-} from "@webspatial/react-sdk";
+import Model3D from "./Model3D";
 import { Product } from "../data/products";
 import "./ProductCart.css";
 
@@ -27,32 +20,5 @@ export function ProductCard({ product }: ProductCardProps) {
         </Link>
       </div>
     </div>
-  );
-}
-
-type Model3DProps = {
-  src: string;
-  position: Vec3;
-  scale: Vec3;
-  rotation: Vec3;
-  className?: string
-}
-function Model3D({ className, src, position, scale, rotation }: Model3DProps) {
-  // Check if HTML model tag is supported
-  const modelSupported = !(document.createElement("model") instanceof HTMLUnknownElement);
-
-  if (modelSupported) return <Model src={src} className={className} />;
-  return (
-    <Reality className={className}>
-      <ModelAsset id={src} src={src} />
-      <SceneGraph>
-        <ModelEntity
-          model={src}
-          position={position}
-          scale={scale}
-          rotation={rotation}
-        />
-      </SceneGraph>
-    </Reality>
   );
 }
