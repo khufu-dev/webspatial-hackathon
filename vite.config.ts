@@ -9,5 +9,12 @@ export default defineConfig({
     webspatial({ outputDir: "/" }),
     createHtmlPlugin({ inject: { data: { XR_ENV: process.env.XR_ENV } } }),
   ],
-  server: { open: true, host: true },
+  server: { 
+    open: true, 
+    host: true,
+    headers: {
+      "Cross-Origin-Embedder-Policy": "require-corp",
+      "Cross-Origin-Opener-Policy": "same-origin"
+    }
+  },
 });
