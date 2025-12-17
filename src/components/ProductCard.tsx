@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Model3D from "./Model3D";
 import { Product } from "../data/products";
-import "./ProductCart.css";
+import "./ProductCard.css";
 
 interface ProductCardProps {
   product: Product;
