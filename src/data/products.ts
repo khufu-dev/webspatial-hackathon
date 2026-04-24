@@ -1,6 +1,6 @@
 export const products = [
   {
-    id: "20",
+    id: "2",
     name: "Vehicle Speedster",
     price: 49999.99,
     image: "/img/vehicle-speedster.png",
@@ -8,7 +8,7 @@ export const products = [
     model: "/usdz/vehicle-speedster.usdz",
   },
   {
-    id: "19",
+    id: "3",
     name: "Incandescent Light Bulb",
     price: 4.99,
     image: "/img/Incandescent_Light_Bulb.png",
@@ -16,7 +16,7 @@ export const products = [
     model: "/usdz/Incandescent_Light_Bulb.usdz",
   },
   {
-    id: "18",
+    id: "4",
     name: "iPhone Air",
     price: 899.99,
     image: "/img/iPhone_Air.png",
@@ -24,7 +24,7 @@ export const products = [
     model: "/usdz/iPhone_Air.usdz",
   },
   {
-    id: "17",
+    id: "5",
     name: "Mario Lego",
     price: 59.99,
     image: "/img/Mario_Lego.png",
@@ -32,7 +32,7 @@ export const products = [
     model: "/usdz/Mario_Lego.usdz",
   },
   {
-    id: "16",
+    id: "6",
     name: "iPhone 17 Pro Max Concept",
     price: 1199.99,
     image: "/img/iPhone_17_Pro_Max_Concept.png",
@@ -40,7 +40,7 @@ export const products = [
     model: "/usdz/iPhone_17_Pro_Max_Concept.usdz",
   },
   {
-    id: "15",
+    id: "7",
     name: "Phone 17 Pro Max",
     price: 1099.99,
     image: "/img/Phone_17_Pro_Max.png",
@@ -48,7 +48,7 @@ export const products = [
     model: "/usdz/Phone_17_Pro_Max.usdz",
   },
   {
-    id: "14",
+    id: "8",
     name: "Realistic Laptop Concept",
     price: 1499.99,
     image: "/img/Realistic_Laptop_Concept.png",
@@ -56,7 +56,7 @@ export const products = [
     model: "/usdz/Realistic_Laptop_Concept.usdz",
   },
   {
-    id: "13",
+    id: "9",
     name: "iPhone 17 Pro",
     price: 999.99,
     image: "/img/iPhone_17_Pro.png",
@@ -64,7 +64,7 @@ export const products = [
     model: "/usdz/iPhone_17_Pro.usdz",
   },
   {
-    id: "12",
+    id: "10",
     name: "12 Vinyl Record",
     price: 19.99,
     image: "/img/12_Vinyl_Record.png",
@@ -80,7 +80,7 @@ export const products = [
     model: "/usdz/Steam_Controller_2025_GabeCube.usdz",
   },
   {
-    id: "10",
+    id: "12",
     name: "Steam Controller 2 Concept V2",
     price: 79.99,
     image: "/img/Steam_Controller_2_Concept_V2.png",
@@ -88,7 +88,7 @@ export const products = [
     model: "/usdz/Steam_Controller_2_Concept_V2.usdz",
   },
   {
-    id: "9",
+    id: "13",
     name: "Keyboard Casio VL-Tone",
     price: 129.99,
     image: "/img/Keyboard_Casio_VL-Tone.png",
@@ -96,7 +96,7 @@ export const products = [
     model: "/usdz/Keyboard_Casio_VL-Tone.usdz",
   },
   {
-    id: "8",
+    id: "14",
     name: "SEGA Pluto",
     price: 599.99,
     image: "/img/SEGA_Pluto.png",
@@ -104,7 +104,7 @@ export const products = [
     model: "/usdz/SEGA_Pluto.usdz",
   },
   {
-    id: "7",
+    id: "15",
     name: "Terminal",
     price: 149.99,
     image: "/img/Terminal.png",
@@ -112,7 +112,7 @@ export const products = [
     model: "/usdz/Terminal.usdz",
   },
   {
-    id: "6",
+    id: "16",
     name: "Yamaha TT-300 Record Player",
     price: 399.99,
     image: "/img/Yamaha_TT-300_Record_Player.png",
@@ -120,12 +120,60 @@ export const products = [
     model: "/usdz/Yamaha_TT-300_Record_Player.usdz",
   },
   {
-    id: "5",
+    id: "17",
     name: "Multimeter",
     price: 29.99,
     image: "/img/MultiMeter_-_FREE.png",
     description: "Digital multimeter measuring voltage and current.",
     model: "/usdz/MultiMeter_-_FREE.usdz",
+  },
+  {
+    id: "18",
+    name: "Guardian Lion",
+    price: 1229.99,
+    image: "/img/Chinese_Guardian_Lion.png",
+    description: "Chinese Guardian Lion",
+    model: "/usdz/Chinese_Guardian_Lion.usdz",
+  },
+  {
+    id: "19",
+    name: "Soul Potion",
+    price: 332.05,
+    image: "/img/Soul_Capture_Potion.png",
+    description: "Soul Capture Potion",
+    model: "/usdz/Soul_Capture_Potion.usdz",
+  },
+  {
+    id: "20",
+    name: "Phoenix",
+    price: 659.32,
+    image: "/img/Phoenix.png",
+    description: "Phoenix with open wings",
+    model: "/glb/Phoenix.glb",
+  },
+  {
+    id: "21",
+    name: "Carrier",
+    price: 265,
+    image: "/img/Carrier.png",
+    description: "Robot Carrier",
+    model: "/glb/Carrier.glb",
+  },
+  {
+    id: "22",
+    name: "Colossus",
+    price: 987,
+    image: "/img/Colossus.png",
+    description: "Massive Colossus",
+    model: "/glb/Colossus.glb",
+  },
+  {
+    id: "23",
+    name: "Infernal War",
+    price: 66.33,
+    image: "/img/Infernal_War.png",
+    description: "Infernal Devil",
+    model: "/glb/Infernal_War.glb",
   },
 ] as const;
 
