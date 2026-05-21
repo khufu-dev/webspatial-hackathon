@@ -1,3 +1,4 @@
+// Local clone of https://github.com/immersive-web/model-element-samples/tree/main/model-element-polyfill
 const REVISION = "184";
 const CullFaceNone = 0;
 const CullFaceBack = 1;
