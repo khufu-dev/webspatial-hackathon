@@ -10,17 +10,18 @@ export default function ProductPage() {
   const product = products.find((p) => p.id === id);
   const modelRef = useRef<ModelRef>(null);
   useEffect(() => {
-    let id: number;
+    let mounted = true;
     function animate() {
+      if (!mounted) return;
       const { current } = modelRef;
       if (current) {
         current.entityTransform = 
           DOMMatrix.fromMatrix(current.entityTransform).rotateSelf(0, 0.5, 0)
       }
-      id = requestAnimationFrame(animate);
+      requestAnimationFrame(animate);
     }
     modelRef.current?.ready?.then(animate);
-    return () => cancelAnimationFrame(id);
+    return () => { mounted = false; };
   }, []);
 
   if (!product) {
