@@ -1,5 +1,6 @@
 import type { Ref } from "react";
 import { Model, ModelRef, ModelProps } from "@webspatial/react-sdk";
+import "./model-element-polyfill.js"
 import "./Model3D.css";
 
 export type Model3DProps = ModelProps & {
