@@ -19,7 +19,7 @@ export default function ProductPage() {
       }
       id = requestAnimationFrame(animate);
     }
-    animate();
+    modelRef.current?.ready?.then(animate);
     return () => cancelAnimationFrame(id);
   }, []);
 
