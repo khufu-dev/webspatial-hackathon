@@ -5,22 +5,31 @@ import { ModelRef } from "@webspatial/react-sdk";
 import { useEffect, useRef } from "react";
 import Model3D from "./components/Model3D";
 
+const ROTATION_DEGREES_PER_SECOND = 30;
+
 export default function ProductPage() {
   const { id } = useParams<{ id: string }>();
   const product = products.find((p) => p.id === id);
   const modelRef = useRef<ModelRef>(null);
   useEffect(() => {
     let mounted = true;
-    function animate() {
+    let lastTimestamp: DOMHighResTimeStamp | undefined;
+
+    function animate(timestamp: DOMHighResTimeStamp) {
       if (!mounted) return;
+
+      const deltaSeconds = 
+        lastTimestamp === undefined ? 0 : (timestamp - lastTimestamp) / 1000;
+      lastTimestamp = timestamp;
       const { current } = modelRef;
       if (current) {
-        current.entityTransform = 
-          DOMMatrix.fromMatrix(current.entityTransform).rotateSelf(0, 0.5, 0)
+        const rotY = ROTATION_DEGREES_PER_SECOND * deltaSeconds;
+        current.entityTransform =
+          DOMMatrix.fromMatrix(current.entityTransform).rotateSelf(0, rotY, 0);
       }
       requestAnimationFrame(animate);
     }
-    modelRef.current?.ready?.then(animate);
+    modelRef.current?.ready?.then(() => requestAnimationFrame(animate));
     return () => { mounted = false; };
   }, []);
 
