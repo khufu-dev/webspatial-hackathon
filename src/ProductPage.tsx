@@ -51,7 +51,7 @@ export default function ProductPage() {
         <Model3D
           className="product-3D"
           src={product.model}
-          imgSrc={product.image}
+          poster={product.image}
           alt={product.name}
           ref={modelRef}
         />

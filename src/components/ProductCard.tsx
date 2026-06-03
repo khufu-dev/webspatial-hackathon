@@ -11,7 +11,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <Model3D
           className="product-3D"
           src={product.model}
-          imgSrc={product.image}
+          poster={product.image}
           alt={product.name}
         />
       </Link>
