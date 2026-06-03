@@ -13,6 +13,7 @@ export function ProductCard({ product }: ProductCardProps) {
           src={product.model}
           poster={product.image}
           alt={product.name}
+          loading="lazy"
         />
       </Link>
       <h3 className="product-name">{product.name}</h3>
