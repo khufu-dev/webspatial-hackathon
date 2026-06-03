@@ -9,4 +9,5 @@ html {
 html.isSpatial {
   color: Canvas;
   --xr-background-material: translucent;
+  border-radius: 44px;
 }
