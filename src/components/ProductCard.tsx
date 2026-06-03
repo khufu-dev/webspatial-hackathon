@@ -1,9 +1,9 @@
 import { Link } from "react-router";
+import type { Product } from "../data/products";
 import Model3D from "./Model3D";
-import { Product } from "../data/products";
 import "./ProductCard.css";
 
-export type ProductCardProps = { product: Product; }
+export type ProductCardProps = { product: Product };
 export function ProductCard({ product }: ProductCardProps) {
   return (
     <div className="product-card">
@@ -20,9 +20,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <p className="product-description">{product.description}</p>
       <p className="product-price">${product.price.toFixed(2)}</p>
       <div className="product-card-footer">
-        <Link to={`/product/${product.id}`}>
-          Go to product
-        </Link>
+        <Link to={`/product/${product.id}`}>Go to product</Link>
       </div>
     </div>
   );

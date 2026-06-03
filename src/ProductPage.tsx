@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router";
 import { products } from "./data/products";
 import "./ProductPage.css";
-import { ModelRef } from "@webspatial/react-sdk";
+import type { ModelRef } from "@webspatial/react-sdk";
 import { useEffect, useRef } from "react";
 import Model3D from "./components/Model3D";
 
@@ -18,19 +18,22 @@ export default function ProductPage() {
     function animate(timestamp: DOMHighResTimeStamp) {
       if (!mounted) return;
 
-      const deltaSeconds = 
+      const deltaSeconds =
         lastTimestamp === undefined ? 0 : (timestamp - lastTimestamp) / 1000;
       lastTimestamp = timestamp;
       const { current } = modelRef;
       if (current) {
         const rotY = ROTATION_DEGREES_PER_SECOND * deltaSeconds;
-        current.entityTransform =
-          DOMMatrix.fromMatrix(current.entityTransform).rotateSelf(0, rotY, 0);
+        current.entityTransform = DOMMatrix.fromMatrix(
+          current.entityTransform,
+        ).rotateSelf(0, rotY, 0);
       }
       requestAnimationFrame(animate);
     }
     modelRef.current?.ready?.then(() => requestAnimationFrame(animate));
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   if (!product) {
@@ -45,9 +48,7 @@ export default function ProductPage() {
   return (
     <div className="productPage">
       <div>
-        <h1 className="product-name">
-          {product.name}
-        </h1>
+        <h1 className="product-name">{product.name}</h1>
         <Model3D
           className="product-3D"
           src={product.model}

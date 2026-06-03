@@ -129,4 +129,4 @@ export const products = [
   },
 ] as const;
 
-export type Product = typeof products[any]
+export type Product = (typeof products)[any];

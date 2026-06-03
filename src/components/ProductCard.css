@@ -5,7 +5,7 @@
   background: rgb(from CanvasText r g b / 20%);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
-  
+
   .product-model {
     width: "100px";
     height: "200px";

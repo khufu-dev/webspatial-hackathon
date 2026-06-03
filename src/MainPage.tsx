@@ -1,13 +1,15 @@
-import { products } from './data/products';
-import { ProductCard } from './components/ProductCard';
+import { ProductCard } from "./components/ProductCard";
+import { products } from "./data/products";
 import "./MainPage.css";
 
 export default function MainPage() {
   return (
     <div className="mainPage">
-      <h1 className='heading' enable-xr>WebSpatial Store</h1>
+      <h1 className="heading" enable-xr>
+        WebSpatial Store
+      </h1>
       <main>
-        {products.map(product => (
+        {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </main>

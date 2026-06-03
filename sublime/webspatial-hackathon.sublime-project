@@ -1,25 +1,18 @@
 {
-  "folders":
-  [
+  "folders": [
     {
       "path": "../",
-      "folder_exclude_patterns": [
-        "dist",
-        "node_modules",
-      ],
+      "folder_exclude_patterns": ["dist", "node_modules"]
     }
   ],
-  "settings":
-  {
-    "LSP":
-    {
-      "LSP-typescript":
-      {
-        "enabled": true,
-      },
+  "settings": {
+    "LSP": {
+      "LSP-typescript": {
+        "enabled": true
+      }
     },
     "js_prettier": {
-      "auto_format_on_save": true,
+      "auto_format_on_save": true
     }
-  },
+  }
 }
