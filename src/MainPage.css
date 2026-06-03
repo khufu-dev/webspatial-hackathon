@@ -1,59 +1,20 @@
 .mainPage {
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
+  padding: 0 2rem;
 
-  .header {
+  h1 {
     text-align: center;
-    margin-bottom: 2rem;
+    --xr-back: 50px;
+    transform: translateZ(100px) rotateY(30deg);
   }
 
-  .header h1 {
-    margin: 0;
-    font-size: 2.5rem;
-    font-weight: 700;
-    background-clip: text;
-  }
-
-  .subtitle {
-    margin-top: 0.5rem;
-    font-size: 1.1rem;
-  }
-
-  .main {
-    display: flex;
-    gap: 2rem;
-    flex: 1;
-  }
-
-  .products-section {
-    flex: 1;
-  }
-
-  .products-section h2 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-  }
-
-  /* Product List */
-  .product-list {
+  main {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1.5rem;
   }
 
-  /* Footer */
   footer {
     margin-top: 2rem;
     text-align: center;
-    font-size: 0.9rem;
-  }
-
-  footer a {
-    text-decoration: none;
-  }
-
-  footer a:hover {
-    text-decoration: underline;
   }
 }
