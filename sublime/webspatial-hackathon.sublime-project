@@ -18,6 +18,8 @@
         "enabled": true,
       },
     },
-    "lsp_format_on_save": true,
+    "js_prettier": {
+      "auto_format_on_save": true,
+    }
   },
 }

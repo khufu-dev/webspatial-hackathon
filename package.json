@@ -8,7 +8,8 @@
     "lint": "tsc --build",
     "build": "npm run lint && vite build",
     "preview": "npm run build && vite preview --host --port 5173",
-    "avp": "npm run build && webspatial-builder run --base=http://localhost:5173"
+    "avp": "npm run build && webspatial-builder run --base=http://localhost:5173",
+    "format": "prettier --write \"**/*.{ts,tsx,css,json,html,md}\""
   },
   "dependencies": {
     "@webspatial/core-sdk": "latest",
@@ -18,6 +19,7 @@
     "react-router": "latest"
   },
   "devDependencies": {
+    "prettier": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@types/node": "latest",
