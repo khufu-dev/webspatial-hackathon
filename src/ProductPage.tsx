@@ -1,6 +1,5 @@
 import { products } from "./data/products";
 import { mountPage } from "./mountPage";
-import "./ProductPage.css";
 import type { ModelRef } from "@webspatial/react-sdk";
 import { useEffect, useRef } from "react";
 import Model3D from "./components/Model3D";
