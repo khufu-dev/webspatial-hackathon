@@ -8,5 +8,6 @@ export default defineConfig({
   input: {
     main: resolve(import.meta.dirname, "index.html"),
     product: resolve(import.meta.dirname, "product.html"),
+    model: resolve(import.meta.dirname, "model.html"),
   },
 });

@@ -1,6 +1,6 @@
 import { products } from "./data/products";
 import { mountPage } from "./mountPage";
-import type { ModelRef } from "@webspatial/react-sdk";
+import { initScene, type ModelRef } from "@webspatial/react-sdk";
 import { useEffect, useRef } from "react";
 import Model3D from "./components/Model3D";
 
@@ -9,7 +9,9 @@ const productId = new URLSearchParams(window.location.search).get("id");
 
 export default function ProductPage() {
   const product = products.find((candidate) => candidate.id === productId);
+  const target = `product-${product?.id}-volume`;
   const modelRef = useRef<ModelRef>(null);
+  // Rotate animation
   useEffect(() => {
     let mounted = true;
     let lastTimestamp: DOMHighResTimeStamp | undefined;
@@ -34,6 +36,13 @@ export default function ProductPage() {
       mounted = false;
     };
   }, []);
+  // Open 3D model in a new volume container
+  useEffect(() => {
+    let defaultSize = { width: "800px", height: "800px", depth: "800px" };
+    initScene(target, (config) => ({ ...config, defaultSize }), {
+      type: "volume",
+    });
+  }, [target]);
 
   if (!product) {
     console.warn(`Product ${productId} not found`);
@@ -54,7 +63,12 @@ export default function ProductPage() {
         <h2>Description</h2>
         <p>{product.description}</p>
         <p>${product.price.toFixed(2)}</p>
-        <a href="/">Back to Store</a>
+        <a href={`/model.html?id=${product.id}`} target={target}>
+          World Space
+        </a>
+        <p>
+          <a href="/">Back to Store</a>
+        </p>
       </article>
     </>
   );
