@@ -1,5 +1,6 @@
 import { ProductCard } from "./components/ProductCard";
 import { products } from "./data/products";
+import { mountPage } from "./mountPage";
 import "./MainPage.css";
 
 export default function MainPage() {
@@ -27,3 +28,5 @@ export default function MainPage() {
     </div>
   );
 }
+
+mountPage(<MainPage />);

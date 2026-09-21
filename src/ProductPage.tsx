@@ -1,15 +1,15 @@
-import { Link, useParams } from "react-router";
 import { products } from "./data/products";
+import { mountPage } from "./mountPage";
 import "./ProductPage.css";
 import type { ModelRef } from "@webspatial/react-sdk";
 import { useEffect, useRef } from "react";
 import Model3D from "./components/Model3D";
 
 const ROTATION_DEGREES_PER_SECOND = 30;
+const productId = new URLSearchParams(window.location.search).get("id");
 
 export default function ProductPage() {
-  const { id } = useParams<{ id: string }>();
-  const product = products.find((p) => p.id === id);
+  const product = products.find((candidate) => candidate.id === productId);
   const modelRef = useRef<ModelRef>(null);
   useEffect(() => {
     let mounted = true;
@@ -38,31 +38,39 @@ export default function ProductPage() {
 
   if (!product) {
     return (
-      <div className="app">
-        <h1>Product Not Found</h1>
-        <p>The product you’re looking for doesn’t exist.</p>
-        <Link to="/">Back to Store</Link>
-      </div>
+      <>
+        <title>Product Not Found | WebSpatial Store</title>
+        <div className="app">
+          <h1>Product Not Found</h1>
+          <p>The product you’re looking for doesn’t exist.</p>
+          <a href="/">Back to Store</a>
+        </div>
+      </>
     );
   }
   return (
-    <div className="productPage">
-      <div>
-        <h1 className="product-name">{product.name}</h1>
-        <Model3D
-          className="product-3D"
-          src={product.model}
-          poster={product.image}
-          alt={product.name}
-          ref={modelRef}
-        />
-        <article>
-          <h2>Description</h2>
-          <p>{product.description}</p>
-          <p>${product.price.toFixed(2)}</p>
-          <Link to="/">Back to Store</Link>
-        </article>
+    <>
+      <title>{product.name} | WebSpatial fStore</title>
+      <div className="productPage">
+        <div>
+          <h1 className="product-name">{product.name}</h1>
+          <Model3D
+            className="product-3D"
+            src={product.model}
+            poster={product.image}
+            alt={product.name}
+            ref={modelRef}
+          />
+          <article>
+            <h2>Description</h2>
+            <p>{product.description}</p>
+            <p>${product.price.toFixed(2)}</p>
+            <a href="/">Back to Store</a>
+          </article>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
+
+mountPage(<ProductPage />);

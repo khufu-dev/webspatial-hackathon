@@ -15,8 +15,7 @@
     "@webspatial/core-sdk": "latest",
     "@webspatial/react-sdk": "latest",
     "react": "latest",
-    "react-dom": "latest",
-    "react-router": "latest"
+    "react-dom": "latest"
   },
   "devDependencies": {
     "prettier": "latest",
