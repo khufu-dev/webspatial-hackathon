@@ -2,6 +2,14 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "headers": [
     {
+      "source": "/:path*.usdz",
+      "headers": [{ "key": "Content-Type", "value": "model/vnd.usdz+zip" }]
+    },
+    {
+      "source": "/:path*.glb",
+      "headers": [{ "key": "Content-Type", "value": "model/gltf-binary" }]
+    },
+    {
       "source": "/usdz/:path*",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=86400" }]
     },
