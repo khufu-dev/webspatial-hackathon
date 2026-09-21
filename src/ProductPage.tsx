@@ -37,38 +37,26 @@ export default function ProductPage() {
   }, []);
 
   if (!product) {
-    return (
-      <>
-        <title>Product Not Found | WebSpatial Store</title>
-        <div className="app">
-          <h1>Product Not Found</h1>
-          <p>The product you’re looking for doesn’t exist.</p>
-          <a href="/">Back to Store</a>
-        </div>
-      </>
-    );
+    console.warn(`Product ${productId} not found`);
+    return (location.href = "/");
   }
   return (
     <>
-      <title>{product.name} | WebSpatial fStore</title>
-      <div className="productPage">
-        <div>
-          <h1 className="product-name">{product.name}</h1>
-          <Model3D
-            className="product-3D"
-            src={product.model}
-            poster={product.image}
-            alt={product.name}
-            ref={modelRef}
-          />
-          <article>
-            <h2>Description</h2>
-            <p>{product.description}</p>
-            <p>${product.price.toFixed(2)}</p>
-            <a href="/">Back to Store</a>
-          </article>
-        </div>
-      </div>
+      <title>{product.name}</title>
+      <h1>{product.name}</h1>
+      <Model3D
+        className="model"
+        src={product.model}
+        poster={product.image}
+        alt={product.name}
+        ref={modelRef}
+      />
+      <article>
+        <h2>Description</h2>
+        <p>{product.description}</p>
+        <p>${product.price.toFixed(2)}</p>
+        <a href="/">Back to Store</a>
+      </article>
     </>
   );
 }

@@ -1,22 +1,18 @@
 @import "style.css";
 
-.mainPage {
-  padding: 0 2rem;
+h1 {
+  text-align: center;
+  --xr-back: 50px;
+  transform: translateZ(100px) rotateY(30deg);
+}
 
-  h1 {
-    text-align: center;
-    --xr-back: 50px;
-    transform: translateZ(100px) rotateY(30deg);
-  }
+main {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
 
-  main {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1.5rem;
-  }
-
-  footer {
-    margin-top: 2rem;
-    text-align: center;
-  }
+footer {
+  margin-top: 2rem;
+  text-align: center;
 }

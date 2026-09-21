@@ -1,13 +1,11 @@
 @import "style.css";
 
-.productPage {
-  .product-3D {
-    margin: auto;
-    width: min(calc(95vh - 300px), calc(100vw - 16px));
-    height: min(calc(95vh - 300px), calc(100vw - 16px));
-    --xr-depth: 400px;
-    --xr-back: 200px;
-    min-width: 200px;
-    min-height: 200px;
-  }
+.model {
+  margin: auto;
+  width: min(calc(95vh - 300px), calc(100vw - 16px));
+  height: min(calc(95vh - 300px), calc(100vw - 16px));
+  --xr-depth: 400px;
+  --xr-back: 200px;
+  min-width: 200px;
+  min-height: 200px;
 }

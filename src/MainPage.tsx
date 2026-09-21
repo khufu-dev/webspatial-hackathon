@@ -5,7 +5,7 @@ import "./MainPage.css";
 
 export default function MainPage() {
   return (
-    <div className="mainPage">
+    <>
       <h1 className="heading" enable-xr>
         WebSpatial Store
       </h1>
@@ -25,7 +25,7 @@ export default function MainPage() {
         </a>{" "}
         + React
       </footer>
-    </div>
+    </>
   );
 }
 
