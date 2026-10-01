@@ -144,6 +144,40 @@ async function startWebGPU(id: string, object: DemoObject) {
   return { renderer, scene };
 }
 
+function createWebGLDemo(object: DemoObject) {
+  const renderer = new WebGLRenderer({ antialias: true, alpha: true });
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.xr.enabled = true;
+  renderer.xr.setReferenceSpaceType("local");
+  const scene = createScene(renderer, object);
+  renderer.xr.addEventListener("sessionend", () => {
+    renderer.setAnimationLoop(null);
+  });
+  return { renderer, scene };
+}
+
+function startWebGL(id: string, object: DemoObject) {
+  const { renderer, scene } = createWebGLDemo(object);
+  scene.background = new THREE.Color(0x181c24);
+  const camera = new THREE.PerspectiveCamera(50, 1, 0.01, 100);
+  const container = element<HTMLDivElement>(`${id}-scene`);
+  container.appendChild(renderer.domElement);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  sizeCanvas(renderer, container, camera);
+  const interaction = bindCanvasInteractions(
+    renderer.domElement,
+    getShape(scene),
+    () => !activeSession,
+    [{ camera }],
+  );
+  canvasInteractions.push(interaction);
+  renderer.setAnimationLoop(() => {
+    if (!activeSession) renderer.render(scene, camera);
+  });
+  element(`${id}-render-status`).textContent = "WebGL is active.";
+  return { renderer, scene };
+}
+
 async function startInline(
   id: string,
   object: DemoObject,
@@ -283,14 +317,6 @@ async function configureImmersive(
     control.status.textContent = `${control.mode === "immersive-ar" ? "AR" : "VR"} is unavailable in this browser or device.`;
     return;
   }
-  if (
-    control.mode === "immersive-ar" &&
-    (!("gpu" in navigator) || !("XRGPUBinding" in globalThis))
-  ) {
-    control.status.textContent =
-      "This browser does not support WebGPU for immersive AR.";
-    return;
-  }
   control.available = true;
   control.status.textContent = "Ready to start an immersive session.";
   updateControls();
@@ -304,8 +330,7 @@ async function configureImmersive(
       } else {
         // Request before other asynchronous work to preserve user activation.
         session = await xr.requestSession(control.mode, {
-          requiredFeatures:
-            control.mode === "immersive-ar" ? ["local", "webgpu"] : ["local"],
+          requiredFeatures: ["local"],
         });
         activeSession = session;
         canvasInteractions.forEach((interaction) => interaction.reset());
@@ -358,8 +383,8 @@ async function initializeVR() {
 }
 
 async function initializeAR() {
-  const pageDemo = await startWebGPU("ar", "pyramid");
-  let demo: Promise<RenderDemo> | undefined;
+  const pageDemo = startWebGL("ar", "pyramid");
+  let demo: RenderDemo | undefined;
   const copyTransform = (from: THREE.Scene, to: THREE.Scene) => {
     const source = getShape(from);
     const target = getShape(to);
@@ -370,13 +395,9 @@ async function initializeAR() {
   await configureImmersive(
     controls[1],
     async () => {
-      demo ??= createGPUDemo("pyramid", true).catch((error) => {
-        demo = undefined;
-        throw error;
-      });
-      const immersiveDemo = await demo;
-      copyTransform(pageDemo.scene, immersiveDemo.scene);
-      return immersiveDemo;
+      demo ??= createWebGLDemo("pyramid");
+      copyTransform(pageDemo.scene, demo.scene);
+      return demo;
     },
     (immersiveDemo) => copyTransform(immersiveDemo.scene, pageDemo.scene),
   );
@@ -425,7 +446,7 @@ void Promise.all([
   }),
   initializeAR().catch((error) => {
     element("ar-render-status").textContent =
-      `Could not start WebGPU: ${message(error)}`;
+      `Could not start WebGL: ${message(error)}`;
     element("ar-session-status").textContent = "AR unavailable.";
   }),
   initializeStereo().catch((error) => {
