@@ -97,7 +97,7 @@ function createBronzeMaterial() {
   });
 }
 
-function createStoneTexture(kind: "granite" | "jade") {
+function createStoneTexture(kind: "granite" | "ruby") {
   const canvas = document.createElement("canvas");
   canvas.width = canvas.height = 256;
   const context = canvas.getContext("2d")!;
@@ -120,9 +120,9 @@ function createStoneTexture(kind: "granite" | "jade") {
       } else {
         const vein = (Math.sin(x * 0.07 + Math.sin(y * 0.035) * 3) + 1) / 2;
         const variation = vein * 0.8 + random() * 0.2;
-        image.data[index] = 25 + variation * 70;
-        image.data[index + 1] = 95 + variation * 90;
-        image.data[index + 2] = 65 + variation * 55;
+        image.data[index] = 170 + variation * 55;
+        image.data[index + 1] = 5 + variation * 10;
+        image.data[index + 2] = 30 + variation * 25;
       }
       image.data[index + 3] = 255;
     }
@@ -194,16 +194,23 @@ export function createScene(
     case "cylinder":
       geometry = new THREE.CylinderGeometry(0.25, 0.25, 0.65, 64);
       material = new THREE.MeshPhysicalMaterial({
-        map: createStoneTexture("jade"),
-        roughness: 0.25,
+        map: createStoneTexture("ruby"),
+        roughness: 0.08,
+        transmission: 0.65,
+        thickness: 0.5,
+        ior: 1.76,
         clearcoat: 1,
-        clearcoatRoughness: 0.2,
+        clearcoatRoughness: 0.08,
       });
       break;
   }
   const mesh = new THREE.Mesh(geometry, material);
   mesh.position.set(0, 0, -2);
-  if (object !== "sphere") mesh.rotation.set(0.15, 0.55, 0);
+  if (object === "cylinder") {
+    mesh.rotation.set(Math.atan(1 / Math.sqrt(2)), Math.PI / 4, 0);
+  } else if (object !== "sphere") {
+    mesh.rotation.set(0.15, 0.55, 0);
+  }
   scene.add(mesh);
   return scene;
 }
