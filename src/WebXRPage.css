@@ -16,6 +16,12 @@ figure {
   display: block;
   width: 100%;
   height: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+
+.scene canvas.dragging {
+  cursor: grabbing;
 }
 
 figcaption {

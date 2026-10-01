@@ -1,6 +1,12 @@
 import * as THREE from "three/webgpu";
 import { WebGLRenderer } from "three";
 import { createScene, type DemoObject } from "./WebXRScenes";
+import {
+  bindCanvasInteractions,
+  bindXRInteractions,
+  getShape,
+  type InteractionView,
+} from "./WebXRInteractions";
 import "./WebXRPage.css";
 
 const element = <T extends HTMLElement>(id: string) =>
@@ -16,6 +22,7 @@ type InlineDemo = {
   scene: THREE.Scene;
   inlineSession: XRSession;
   stopFrames?: () => void;
+  interaction: ReturnType<typeof bindCanvasInteractions>;
 };
 type ImmersiveControl = {
   mode: "immersive-vr" | "immersive-ar";
@@ -42,6 +49,7 @@ let activeControl: ImmersiveControl | undefined;
 let requestingSession = false;
 const stereoButton = element<HTMLButtonElement>("stereo-button");
 let stereoReady = false;
+const canvasInteractions: ReturnType<typeof bindCanvasInteractions>[] = [];
 
 function updateControls() {
   stereoButton.disabled = !stereoReady || requestingSession || !!activeSession;
@@ -121,11 +129,19 @@ async function startWebGPU(id: string, object: DemoObject) {
   container.appendChild(renderer.domElement);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   sizeCanvas(renderer, container, camera);
+  const interaction = bindCanvasInteractions(
+    renderer.domElement,
+    getShape(scene),
+    () => !activeSession,
+    [{ camera }],
+  );
+  canvasInteractions.push(interaction);
   await renderer.compileAsync(scene, camera);
   await renderer.setAnimationLoop(() => {
     if (!activeSession) renderer.render(scene, camera);
   });
   element(`${id}-render-status`).textContent = "WebGPU is active.";
+  return { renderer, scene };
 }
 
 async function startInline(
@@ -148,9 +164,16 @@ async function startInline(
   container.appendChild(renderer.domElement);
   sizeCanvas(renderer, container);
   const scene = createScene(renderer, object);
+  const interaction = bindCanvasInteractions(
+    renderer.domElement,
+    getShape(scene),
+    () => !activeSession,
+  );
+  canvasInteractions.push(interaction);
+  renderer.xr.addEventListener("sessionstart", interaction.reset);
   scene.background = new THREE.Color(0x181c24);
   const session = await xr.requestSession("inline");
-  const demo = { renderer, scene, inlineSession: session };
+  const demo = { renderer, scene, inlineSession: session, interaction };
   await bindInline(demo, status);
   return demo;
 }
@@ -172,6 +195,7 @@ async function bindInline(
     const referenceSpace = await session.requestReferenceSpace("viewer");
     const camera = new THREE.PerspectiveCamera();
     camera.matrixAutoUpdate = false;
+    const inputCameras = new Map<XREye, THREE.PerspectiveCamera>();
     const stereoGranted =
       session.enabledFeatures?.includes("inline-stereo") === true;
     let stopped = false;
@@ -199,6 +223,7 @@ async function bindInline(
       renderer.setRenderTarget(null);
       renderer.setScissorTest(true);
       const pixelRatio = renderer.getPixelRatio();
+      const interactionViews: InteractionView[] = [];
       // Use each browser-provided viewport; do not assume side-by-side packing.
       for (const view of pose.views) {
         const viewport = layer.getViewport(view);
@@ -214,8 +239,24 @@ async function bindInline(
         renderer.setViewport(x, y, width, height);
         renderer.setScissor(x, y, width, height);
         renderer.render(scene, camera);
+        let inputCamera = inputCameras.get(view.eye);
+        if (!inputCamera) {
+          inputCamera = new THREE.PerspectiveCamera();
+          inputCameras.set(view.eye, inputCamera);
+        }
+        inputCamera.copy(camera);
+        interactionViews.push({
+          camera: inputCamera,
+          bounds: {
+            x: viewport.x / layer.framebufferWidth,
+            y: 1 - (viewport.y + viewport.height) / layer.framebufferHeight,
+            width: viewport.width / layer.framebufferWidth,
+            height: viewport.height / layer.framebufferHeight,
+          },
+        });
       }
       renderer.setScissorTest(false);
+      demo.interaction.setViews(interactionViews);
     };
     session.requestAnimationFrame(renderFrame);
     status.textContent = stereo
@@ -231,6 +272,7 @@ async function bindInline(
 async function configureImmersive(
   control: ImmersiveControl,
   getDemo: () => Promise<RenderDemo>,
+  onSessionEnd?: (demo: RenderDemo) => void,
 ) {
   const xr = navigator.xr;
   if (
@@ -266,6 +308,7 @@ async function configureImmersive(
             control.mode === "immersive-ar" ? ["local", "webgpu"] : ["local"],
         });
         activeSession = session;
+        canvasInteractions.forEach((interaction) => interaction.reset());
         activeControl = control;
         session.addEventListener(
           "end",
@@ -279,9 +322,22 @@ async function configureImmersive(
           { once: true },
         );
         const { renderer, scene } = await getDemo();
+        if (onSessionEnd) {
+          session.addEventListener(
+            "end",
+            () => onSessionEnd({ renderer, scene }),
+            { once: true },
+          );
+        }
+        const interaction = bindXRInteractions(session, getShape(scene), () =>
+          renderer.xr.getReferenceSpace(),
+        );
         const camera = new THREE.PerspectiveCamera(50, 1, 0.01, 100);
-        await renderer.setAnimationLoop(() => {
-          if (renderer.xr.isPresenting) renderer.render(scene, camera);
+        await renderer.setAnimationLoop((_time, frame) => {
+          if (renderer.xr.isPresenting) {
+            if (frame) interaction.update(frame);
+            renderer.render(scene, camera);
+          }
         });
         await renderer.xr.setSession(session);
         control.status.textContent = "Immersive session is active.";
@@ -302,15 +358,28 @@ async function initializeVR() {
 }
 
 async function initializeAR() {
-  await startWebGPU("ar", "pyramid");
+  const pageDemo = await startWebGPU("ar", "pyramid");
   let demo: Promise<RenderDemo> | undefined;
-  await configureImmersive(controls[1], () => {
-    demo ??= createGPUDemo("pyramid", true).catch((error) => {
-      demo = undefined;
-      throw error;
-    });
-    return demo;
-  });
+  const copyTransform = (from: THREE.Scene, to: THREE.Scene) => {
+    const source = getShape(from);
+    const target = getShape(to);
+    target.position.copy(source.position);
+    target.quaternion.copy(source.quaternion);
+    target.scale.copy(source.scale);
+  };
+  await configureImmersive(
+    controls[1],
+    async () => {
+      demo ??= createGPUDemo("pyramid", true).catch((error) => {
+        demo = undefined;
+        throw error;
+      });
+      const immersiveDemo = await demo;
+      copyTransform(pageDemo.scene, immersiveDemo.scene);
+      return immersiveDemo;
+    },
+    (immersiveDemo) => copyTransform(immersiveDemo.scene, pageDemo.scene),
+  );
 }
 
 async function initializeStereo() {

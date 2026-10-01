@@ -205,6 +205,7 @@ export function createScene(
       break;
   }
   const mesh = new THREE.Mesh(geometry, material);
+  mesh.name = "demo-shape";
   mesh.position.set(0, 0, -2);
   if (object === "cylinder") {
     mesh.rotation.set(Math.atan(1 / Math.sqrt(2)), Math.PI / 4, 0);
