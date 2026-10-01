@@ -5,6 +5,7 @@ import {
   bindCanvasInteractions,
   bindXRInteractions,
   getShape,
+  getShapes,
   type InteractionView,
 } from "./WebXRInteractions";
 import "./WebXRPage.css";
@@ -131,7 +132,7 @@ async function startWebGPU(id: string, object: DemoObject) {
   sizeCanvas(renderer, container, camera);
   const interaction = bindCanvasInteractions(
     renderer.domElement,
-    getShape(scene),
+    getShapes(scene),
     () => !activeSession,
     [{ camera }],
   );
@@ -166,7 +167,7 @@ function startWebGL(id: string, object: DemoObject) {
   sizeCanvas(renderer, container, camera);
   const interaction = bindCanvasInteractions(
     renderer.domElement,
-    getShape(scene),
+    getShapes(scene),
     () => !activeSession,
     [{ camera }],
   );
@@ -200,7 +201,7 @@ async function startInline(
   const scene = createScene(renderer, object);
   const interaction = bindCanvasInteractions(
     renderer.domElement,
-    getShape(scene),
+    getShapes(scene),
     () => !activeSession,
   );
   canvasInteractions.push(interaction);
@@ -354,7 +355,7 @@ async function configureImmersive(
             { once: true },
           );
         }
-        const interaction = bindXRInteractions(session, getShape(scene), () =>
+        const interaction = bindXRInteractions(session, getShapes(scene), () =>
           renderer.xr.getReferenceSpace(),
         );
         const camera = new THREE.PerspectiveCamera(50, 1, 0.01, 100);

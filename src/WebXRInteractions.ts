@@ -7,6 +7,25 @@ export function getShape(scene: THREE.Scene) {
   return scene.getObjectByName("demo-shape")!;
 }
 
+export function getShapes(scene: THREE.Scene) {
+  return scene.children.filter((object) => object.userData.demoShape);
+}
+
+function pickShape(raycaster: THREE.Raycaster, shapes: THREE.Object3D[]) {
+  shapes.forEach((shape) => shape.updateWorldMatrix(true, true));
+  const hit = raycaster.intersectObjects(shapes, true)[0];
+  if (!hit) return undefined;
+  return shapes.find((shape) => {
+    for (
+      let object: THREE.Object3D | null = hit.object;
+      object;
+      object = object.parent
+    )
+      if (object === shape) return true;
+    return false;
+  });
+}
+
 // Rebase whenever a finger/grab is added or removed to avoid transform jumps.
 class DragGesture<Key> {
   readonly points = new Map<Key, THREE.Vector3>();
@@ -71,17 +90,25 @@ export type InteractionView = {
 
 export function bindCanvasInteractions(
   canvas: HTMLCanvasElement,
-  shape: THREE.Object3D,
+  shapes: THREE.Object3D[],
   enabled: () => boolean,
   initialViews: InteractionView[] = [],
 ) {
-  const gesture = new DragGesture<number>(shape);
-  const plane = new THREE.Plane();
+  const states = new Map(
+    shapes.map((shape) => [
+      shape,
+      {
+        gesture: new DragGesture<number>(shape),
+        plane: new THREE.Plane(),
+        view: undefined as InteractionView | undefined,
+      },
+    ]),
+  );
+  const pointers = new Map<number, THREE.Object3D>();
   const raycaster = new THREE.Raycaster();
   let views = initialViews;
-  let dragView: InteractionView | undefined;
 
-  const rayAt = (event: PointerEvent, view: InteractionView) => {
+  const rayAt = (event: MouseEvent, view: InteractionView) => {
     const rect = canvas.getBoundingClientRect();
     const bounds = view.bounds ?? { x: 0, y: 0, width: 1, height: 1 };
     const x = (event.clientX - rect.left) / rect.width;
@@ -96,61 +123,79 @@ export function bindCanvasInteractions(
     );
     return { x, y };
   };
+  const viewAt = (event: MouseEvent) =>
+    views.find((view) => {
+      const { x, y } = rayAt(event, view);
+      const b = view.bounds ?? { x: 0, y: 0, width: 1, height: 1 };
+      return x >= b.x && x <= b.x + b.width && y >= b.y && y <= b.y + b.height;
+    });
   const down = (event: PointerEvent) => {
-    if (!enabled() || event.button !== 0 || gesture.points.size >= 2) return;
-    if (!gesture.points.size) {
-      dragView = views.find((view) => {
-        const { x, y } = rayAt(event, view);
-        const b = view.bounds ?? { x: 0, y: 0, width: 1, height: 1 };
-        return (
-          x >= b.x && x <= b.x + b.width && y >= b.y && y <= b.y + b.height
-        );
-      });
-      if (!dragView) return;
-      rayAt(event, dragView);
-      shape.updateWorldMatrix(true, false);
-      if (!raycaster.intersectObject(shape, true).length) return;
-      plane.setFromNormalAndCoplanarPoint(
-        dragView.camera.getWorldDirection(new THREE.Vector3()),
-        shape.position,
+    if (!enabled() || event.button !== 0 || pointers.has(event.pointerId))
+      return;
+    const view = viewAt(event);
+    if (!view) return;
+    let shape = pickShape(raycaster, shapes);
+    // A second finger on empty canvas may complete the only active pinch.
+    if (!shape && event.pointerType === "touch" && pointers.size === 1)
+      shape = pointers.values().next().value;
+    if (!shape) return;
+    const state = states.get(shape)!;
+    if (!state.gesture.points.size) {
+      state.view = view;
+      state.plane.setFromNormalAndCoplanarPoint(
+        view.camera.getWorldDirection(new THREE.Vector3()),
+        shape.getWorldPosition(new THREE.Vector3()),
       );
     }
-    if (!dragView) return;
-    rayAt(event, dragView);
-    const point = raycaster.ray.intersectPlane(plane, new THREE.Vector3());
-    if (!point || !gesture.add(event.pointerId, point)) return;
+    rayAt(event, state.view!);
+    const point = raycaster.ray.intersectPlane(
+      state.plane,
+      new THREE.Vector3(),
+    );
+    if (!point || !state.gesture.add(event.pointerId, point)) return;
+    pointers.set(event.pointerId, shape);
     canvas.setPointerCapture(event.pointerId);
     canvas.classList.add("dragging");
     event.preventDefault();
   };
   const move = (event: PointerEvent) => {
     if (!enabled()) return reset();
-    const point = gesture.points.get(event.pointerId);
-    if (!point || !dragView) return;
-    rayAt(event, dragView);
-    if (raycaster.ray.intersectPlane(plane, point)) gesture.update();
+    const shape = pointers.get(event.pointerId);
+    if (!shape) return;
+    const state = states.get(shape)!;
+    const point = state.gesture.points.get(event.pointerId)!;
+    rayAt(event, state.view!);
+    if (raycaster.ray.intersectPlane(state.plane, point))
+      state.gesture.update();
   };
   const up = (event: PointerEvent) => {
-    gesture.remove(event.pointerId);
-    if (canvas.hasPointerCapture(event.pointerId)) {
+    const shape = pointers.get(event.pointerId);
+    if (shape) {
+      const state = states.get(shape)!;
+      state.gesture.remove(event.pointerId);
+      if (!state.gesture.points.size) state.view = undefined;
+      pointers.delete(event.pointerId);
+    }
+    if (canvas.hasPointerCapture(event.pointerId))
       canvas.releasePointerCapture(event.pointerId);
-    }
-    if (!gesture.points.size) {
-      dragView = undefined;
-      canvas.classList.remove("dragging");
-    }
+    if (!pointers.size) canvas.classList.remove("dragging");
   };
   const reset = () => {
-    for (const pointerId of [...gesture.points.keys()]) {
-      gesture.remove(pointerId);
-      if (canvas.hasPointerCapture(pointerId))
-        canvas.releasePointerCapture(pointerId);
+    const ids = [...pointers.keys()];
+    pointers.clear();
+    for (const state of states.values()) {
+      state.gesture.points.clear();
+      state.gesture.rebase();
+      state.view = undefined;
     }
-    dragView = undefined;
+    for (const id of ids)
+      if (canvas.hasPointerCapture(id)) canvas.releasePointerCapture(id);
     canvas.classList.remove("dragging");
   };
   const wheel = (event: WheelEvent) => {
-    if (!enabled() || !views.length) return;
+    if (!enabled() || !viewAt(event)) return;
+    const shape = pickShape(raycaster, shapes);
+    if (!shape) return;
     event.preventDefault();
     const pixels =
       event.deltaY *
@@ -166,7 +211,7 @@ export function bindCanvasInteractions(
         maxScale,
       ),
     );
-    gesture.rebase();
+    states.get(shape)!.gesture.rebase();
   };
   canvas.addEventListener("pointerdown", down);
   canvas.addEventListener("pointermove", move);
@@ -185,11 +230,19 @@ export function bindCanvasInteractions(
 
 export function bindXRInteractions(
   session: XRSession,
-  shape: THREE.Object3D,
+  shapes: THREE.Object3D[],
   getReferenceSpace: () => XRReferenceSpace | null,
 ) {
-  const gesture = new DragGesture<XRInputSource>(shape);
-  const plane = new THREE.Plane();
+  const states = new Map(
+    shapes.map((shape) => [
+      shape,
+      {
+        gesture: new DragGesture<XRInputSource>(shape),
+        plane: new THREE.Plane(),
+      },
+    ]),
+  );
+  const sources = new Map<XRInputSource, THREE.Object3D>();
   const raycaster = new THREE.Raycaster();
   const gripSources = new Set<XRInputSource>();
   const setRay = (
@@ -218,45 +271,56 @@ export function bindXRInteractions(
         : null;
     }
     if (!setRay(frame, source, space)) return null;
-    return raycaster.ray.intersectPlane(plane, new THREE.Vector3());
+    const shape = sources.get(source);
+    if (!shape) return null;
+    return raycaster.ray.intersectPlane(
+      states.get(shape)!.plane,
+      new THREE.Vector3(),
+    );
   };
   const start = (event: XRInputSourceEvent) => {
     const space = getReferenceSpace();
     const source = event.inputSource;
-    if (
-      !space ||
-      session.visibilityState !== "visible" ||
-      gesture.points.size >= 2 ||
-      gesture.points.has(source)
-    )
+    if (!space || session.visibilityState !== "visible" || sources.has(source))
       return;
     if (!setRay(event.frame, source, space)) return;
+    const shape = pickShape(raycaster, shapes);
+    if (!shape) return;
+    const { gesture, plane } = states.get(shape)!;
+    if (gesture.points.size >= 2) return;
     if (!gesture.points.size) {
-      shape.updateWorldMatrix(true, false);
-      if (!raycaster.intersectObject(shape, true).length) return;
       plane.setFromNormalAndCoplanarPoint(
         raycaster.ray.direction,
-        shape.position,
+        shape.getWorldPosition(new THREE.Vector3()),
       );
     }
     // Select with the pointing/gaze ray; move with the hand/controller grip.
     if (source.gripSpace && event.frame.getPose(source.gripSpace, space))
       gripSources.add(source);
+    sources.set(source, shape);
     const point = pointAt(event.frame, source, space);
     if (point) gesture.add(source, point);
-    else gripSources.delete(source);
+    else {
+      sources.delete(source);
+      gripSources.delete(source);
+    }
   };
   const remove = (source: XRInputSource) => {
-    gesture.remove(source);
+    const shape = sources.get(source);
+    if (shape) states.get(shape)!.gesture.remove(source);
+    sources.delete(source);
     gripSources.delete(source);
   };
   const end = (event: XRInputSourceEvent) => remove(event.inputSource);
   const changed = (event: XRInputSourcesChangeEvent) =>
     event.removed.forEach(remove);
   const reset = () => {
-    gesture.points.clear();
+    sources.clear();
     gripSources.clear();
-    gesture.rebase();
+    for (const { gesture } of states.values()) {
+      gesture.points.clear();
+      gesture.rebase();
+    }
   };
   const visibility = () => {
     if (session.visibilityState !== "visible") reset();
@@ -277,15 +341,16 @@ export function bindXRInteractions(
     update(frame: XRFrame) {
       const space = getReferenceSpace();
       if (!space || session.visibilityState !== "visible") return;
-      for (const source of [...gesture.points.keys()]) {
+      for (const [source, shape] of [...sources]) {
+        const { gesture } = states.get(shape)!;
         const point = pointAt(frame, source, space);
         if (!point) {
-          reset();
-          return;
+          remove(source);
+          continue;
         }
         gesture.points.get(source)!.copy(point);
       }
-      gesture.update();
+      for (const { gesture } of states.values()) gesture.update();
     },
   };
 }

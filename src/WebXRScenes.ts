@@ -206,6 +206,7 @@ export function createScene(
   }
   const mesh = new THREE.Mesh(geometry, material);
   mesh.name = "demo-shape";
+  mesh.userData.demoShape = true;
   mesh.position.set(0, 0, -2);
   if (object === "cylinder") {
     mesh.rotation.set(Math.atan(1 / Math.sqrt(2)), Math.PI / 4, 0);
@@ -213,5 +214,20 @@ export function createScene(
     mesh.rotation.set(0.15, 0.55, 0);
   }
   scene.add(mesh);
+  if (object === "cube") {
+    mesh.position.x = -0.45;
+    const sphere = new THREE.Mesh(
+      new THREE.SphereGeometry(0.3, 64, 32),
+      new THREE.MeshStandardMaterial({
+        color: 0xffd700,
+        metalness: 1,
+        roughness: 0.22,
+      }),
+    );
+    sphere.name = "gold-sphere";
+    sphere.userData.demoShape = true;
+    sphere.position.set(0.45, 0, -2);
+    scene.add(sphere);
+  }
   return scene;
 }
