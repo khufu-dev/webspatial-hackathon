@@ -23,6 +23,9 @@ export default function MainPage() {
           WebSpatial
         </a>{" "}
         + React
+        <p>
+          <a href="./webxr.html">WebXR demo</a>
+        </p>
       </footer>
     </>
   );

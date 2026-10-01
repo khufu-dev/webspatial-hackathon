@@ -8,5 +8,6 @@ export default defineConfig({
   input: {
     main: resolve(import.meta.dirname, "index.html"),
     product: resolve(import.meta.dirname, "product.html"),
+    webxr: resolve(import.meta.dirname, "webxr.html"),
   },
 });

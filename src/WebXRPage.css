@@ -1,0 +1,23 @@
+@import "style.css";
+
+section {
+  margin: 2rem 0;
+}
+
+figure {
+  margin: 0;
+}
+
+.scene {
+  height: 320px;
+}
+
+.scene canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+figcaption {
+  margin-top: 0.5rem;
+}

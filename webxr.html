@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebXR Demo</title>
+  </head>
+  <body>
+    <main>
+      <h1>WebXR Demo</h1>
+      <a href="./index.html">Back to Store</a>
+
+      <section aria-labelledby="gpu-heading">
+        <h2 id="gpu-heading">1. WebGPU · Golden sphere</h2>
+        <figure>
+          <div
+            id="gpu-scene"
+            class="scene"
+            aria-label="Golden sphere rendered with WebGPU"
+          ></div>
+          <figcaption>
+            WebGPU renders a golden sphere directly into a canvas on this page.
+            This section does not start a WebXR session.
+          </figcaption>
+        </figure>
+        <p id="gpu-render-status" role="status">Starting WebGPU…</p>
+      </section>
+
+      <section aria-labelledby="vr-heading">
+        <h2 id="vr-heading">2. Inline WebXR + immersive VR · Silver cube</h2>
+        <figure>
+          <div
+            id="vr-scene"
+            class="scene"
+            aria-label="Silver cube in inline WebXR"
+          ></div>
+          <figcaption>
+            Inline WebXR displays the silver cube inside the page using WebGL.
+            Enter VR opens the same scene in an immersive virtual reality
+            session on a supported device.
+          </figcaption>
+        </figure>
+        <p id="vr-inline-status" role="status">Starting inline WebXR…</p>
+        <button id="vr-button" type="button" disabled>Enter VR</button>
+        <p id="vr-session-status" role="status">
+          Checking immersive VR support.
+        </p>
+      </section>
+
+      <section aria-labelledby="ar-heading">
+        <h2 id="ar-heading">3. WebGPU + immersive AR · Bronze pyramid</h2>
+        <figure>
+          <div
+            id="ar-scene"
+            class="scene"
+            aria-label="Bronze pyramid rendered with WebGPU"
+          ></div>
+          <figcaption>
+            WebGPU displays a weathered bronze pyramid with mottled tarnish and
+            fine scratches in a canvas on this page. Open in AR renders it with
+            WebGPU over your surroundings in a supported immersive augmented
+            reality session.
+          </figcaption>
+        </figure>
+        <p id="ar-render-status" role="status">Starting WebGPU…</p>
+        <button id="ar-button" type="button" disabled>Open in AR</button>
+        <p id="ar-session-status" role="status">
+          Checking immersive AR support.
+        </p>
+      </section>
+
+      <section aria-labelledby="stereo-heading">
+        <h2 id="stereo-heading">4. Inline stereo WebXR · Jade cylinder</h2>
+        <figure>
+          <div
+            id="stereo-scene"
+            class="scene"
+            aria-label="Jade cylinder requesting inline stereo WebXR"
+          ></div>
+          <figcaption>
+            Start inline stereo requests separate left-eye and right-eye WebXR
+            views inside the page using WebGL. If the browser does not grant
+            inline-stereo, this section shows a labeled mono inline view
+            instead.
+          </figcaption>
+        </figure>
+        <button id="stereo-button" type="button" disabled>
+          Start inline stereo
+        </button>
+        <p id="stereo-inline-status" role="status">
+          Checking inline stereo support.
+        </p>
+      </section>
+    </main>
+    <script type="module" src="/src/WebXRPage.ts"></script>
+  </body>
+</html>
