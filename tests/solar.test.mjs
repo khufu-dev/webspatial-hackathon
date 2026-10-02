@@ -91,6 +91,8 @@ test("WASM output is copied, so later evaluations do not mutate earlier position
 test("time playback supports real time, reverse, pause, and bounded acceleration", () => {
   const initial = Date.UTC(2026, 9, 2);
   near(advanceTime(initial, 1, 1 / 86400), initial + 1000, 0.001);
+  near(advanceTime(initial, 1, 7), initial + 7 * DAY_MS, 0.001);
+  near(advanceTime(initial, 1 / 60, 7), initial + (7 * DAY_MS) / 60, 0.001);
   near(advanceTime(initial, 2, -30), initial - 60 * DAY_MS, 0.001);
   near(advanceTime(initial, 20, 0), initial, 0.001);
   assert.equal(advanceTime(MAX_TIME - 100, 1, 365), MAX_TIME);

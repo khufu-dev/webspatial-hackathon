@@ -44,9 +44,12 @@ Every commit on main is automatically deployed via [Vercel](https://vercel.com/k
 
 ## Solar observatory
 
-Open `/webxr.html#solar-section` for section 5. Select a planet, drag to orbit,
-scroll/pinch to zoom, and use the time controls to pause, reverse, accelerate,
-or jump to a date. **Now** restores the current UTC time at real-time speed.
+Open `/webxr.html#solar-section` for section 5. Select the Sun or a planet using
+the textured thumbnails, drag to orbit, scroll/pinch to zoom, and use the time
+controls to pause, reverse, accelerate, or jump to a date. Playback starts at
+**1 week / sec** (paused when reduced motion is preferred). **Now** restores
+the current UTC time at real-time speed. The observatory fits the window height;
+**Full screen** expands it to fill the screen.
 **Explore** compresses distances and enlarges bodies; **True scale** uses
 physical distances and radii. Use planet buttons to find bodies at true scale.
 
@@ -58,7 +61,7 @@ rings include the Cassini Division and an analytic planet shadow.
 **Enter solar VR** requests `immersive-vr` with `local` reference space.
 Browsers exposing `XRGPUBinding` use the required `webgpu` session feature;
 other headsets use Three.js's WebGL backend for the same scene. Point and
-select planets or the floating Overview, Pause / play, Next planet, and Exit VR
+select the Sun, planets, or the floating Overview, Pause / play, Next body, and Exit VR
 controls. Immersive sessions are coordinated with sections 2–4. HTTPS or
 localhost and a compatible headset/browser are required.
 

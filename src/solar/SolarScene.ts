@@ -20,6 +20,8 @@ import {
   planets,
   positionAt,
   radians,
+  SUN_INDEX,
+  sunInfo,
   type OrbitKernel,
 } from "./ephemeris";
 
@@ -36,6 +38,7 @@ export function createSolarScene(kernel: OrbitKernel) {
     new THREE.MeshBasicMaterial({ color: "#ffdd9f" }),
   );
   sun.name = "Sun";
+  sun.userData.planetIndex = SUN_INDEX;
   system.add(sun);
 
   // Light direction is always from the Sun. Constant attenuation is an
@@ -226,8 +229,8 @@ export function createSolarScene(kernel: OrbitKernel) {
         (((jd - J2000) / body.planet.day) % 1) * Math.PI * 2;
     }
     clouds.rotation.y = ((time / DAY_MS / 1.02) % 1) * Math.PI * 2;
-    sun.scale.setScalar(trueScale ? (695700 / AU_KM) * 10 : 0.95);
-    sun.rotation.y = (((jd - J2000) / 25.38) % 1) * Math.PI * 2;
+    sun.scale.setScalar(trueScale ? (sunInfo.radius / AU_KM) * 10 : 0.95);
+    sun.rotation.y = (((jd - J2000) / sunInfo.day) % 1) * Math.PI * 2;
     system.updateWorldMatrix(true, true);
     sun.getWorldPosition(sunPosition.value);
     bodies[5].anchor.getWorldPosition(saturnCenter.value);
@@ -297,9 +300,18 @@ export function createSolarScene(kernel: OrbitKernel) {
     system,
     bodies,
     sun,
+    targets: [
+      ...bodies,
+      {
+        anchor: sun,
+        get radius() {
+          return sun.scale.x;
+        },
+      },
+    ],
     update,
     loadTextures,
-    pickable: [...bodies.map((body) => body.surface), rings],
+    pickable: [...bodies.map((body) => body.surface), rings, sun],
     setScale(physical: boolean, time: number) {
       trueScale = physical;
       update(time);

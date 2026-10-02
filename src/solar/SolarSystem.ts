@@ -6,9 +6,12 @@ import {
   MAX_TIME,
   MIN_TIME,
   planets,
+  SUN_INDEX,
+  sunInfo,
 } from "./ephemeris";
 import { createSolarScene, type SolarScene } from "./SolarScene";
 import { bindSolarXR } from "./SolarXR";
+import { createPlanetIcon } from "./PlanetIcon";
 import "./SolarSystem.css";
 
 type SessionHost = {
@@ -54,9 +57,10 @@ export async function startSolarSystem(host: SessionHost) {
   let readyMessage = "";
   let expanded = false;
   let previousOverflow = "";
+  let previousScroll = { x: 0, y: 0 };
   let paused = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let live = true;
-  let rate = 1 / 86400;
+  let live = false;
+  let rate = Number(speedInput.value);
   let time = Math.min(MAX_TIME, Math.max(MIN_TIME, Date.now()));
   const camera = new THREE.PerspectiveCamera(45, 1, 0.001, 5000);
   const vrCamera = new THREE.PerspectiveCamera(55, 1, 0.005, 2000);
@@ -80,17 +84,19 @@ export async function startSolarSystem(host: SessionHost) {
   };
   const updateStats = () => {
     const planet = planets[selected];
+    const isSun = selected === SUN_INDEX;
+    const object = isSun ? sunInfo : planet;
     const body = solar?.bodies[selected];
     element("solar-object-type").textContent =
-      planet?.kind ?? "Our cosmic neighborhood";
-    element("solar-object-name").textContent = planet?.name ?? "Solar System";
+      object?.kind ?? "Our cosmic neighborhood";
+    element("solar-object-name").textContent = object?.name ?? "Solar System";
     element("solar-description").textContent =
-      planet?.description ??
-      "Eight worlds, one star. Trace their paths through space, then choose a planet to get closer.";
-    element("solar-radius").textContent = planet
-      ? `${planet.radius.toLocaleString("en-US")} km`
+      object?.description ??
+      "Eight worlds, one star. Follow their motion through space, then choose the Sun or a planet to get closer.";
+    element("solar-radius").textContent = object
+      ? `${object.radius.toLocaleString("en-US")} km`
       : "8 planets";
-    element("solar-radius-label").textContent = planet
+    element("solar-radius-label").textContent = object
       ? "Mean radius"
       : "Worlds to explore";
     element("solar-period").textContent = planet
@@ -99,18 +105,24 @@ export async function startSolarSystem(host: SessionHost) {
     element("solar-period-label").textContent = planet
       ? "Orbital period"
       : "Age of our Sun";
-    element("solar-distance").textContent = body
-      ? `${body.distanceAU.toFixed(3)} AU`
-      : "30.07 AU";
-    element("solar-distance-label").textContent = planet
-      ? "Distance to Sun"
-      : "Neptune’s mean orbit";
-    element("solar-day").textContent = planet
-      ? `${Math.abs(planet.day * 24).toLocaleString("en-US", { maximumFractionDigits: 2 })} h`
+    element("solar-distance").textContent = isSun
+      ? "5,772 K"
+      : body
+        ? `${body.distanceAU.toFixed(3)} AU`
+        : "30.07 AU";
+    element("solar-distance-label").textContent = isSun
+      ? "Photosphere"
+      : planet
+        ? "Distance to Sun"
+        : "Neptune’s mean orbit";
+    element("solar-day").textContent = object
+      ? `${Math.abs(object.day * 24).toLocaleString("en-US", { maximumFractionDigits: 2 })} h`
       : "299,792 km/s";
-    element("solar-day-label").textContent = planet
-      ? `Sidereal day${planet.day < 0 ? " · retrograde" : ""}`
-      : "Speed of light";
+    element("solar-day-label").textContent = isSun
+      ? "Equatorial rotation"
+      : planet
+        ? `Sidereal day${planet.day < 0 ? " · retrograde" : ""}`
+        : "Speed of light";
     planetNav
       .querySelectorAll<HTMLButtonElement>("button")
       .forEach((item) =>
@@ -129,7 +141,7 @@ export async function startSolarSystem(host: SessionHost) {
     lens.textContent = physical
       ? "True distances & radii"
       : "Distances compressed · planets enlarged";
-    viewport.dataset.selectedPlanet = planet?.name ?? "overview";
+    viewport.dataset.selectedPlanet = object?.name ?? "overview";
     viewport.dataset.simulationTime = String(time);
   };
   const focus = (index: number) => {
@@ -145,7 +157,7 @@ export async function startSolarSystem(host: SessionHost) {
         .multiplyScalar(((physical ? 315 : 20) / Math.sin(halfAngle)) * 1.05);
       orbitControls.minDistance = physical ? 0.01 : 0.2;
     } else {
-      const body = solar.bodies[selected];
+      const body = solar.targets[selected];
       // Approach from the sunlit side, retaining enough phase angle to show
       // the terminator. The camera tracks orbital translation during playback.
       focusOffset
@@ -159,7 +171,7 @@ export async function startSolarSystem(host: SessionHost) {
     }
     camera.near =
       physical && selected >= 0
-        ? Math.max(solar.bodies[selected].radius / 50, 0.000001)
+        ? Math.max(solar.targets[selected].radius / 50, 0.000001)
         : 0.001;
     camera.updateProjectionMatrix();
     transitioning = true;
@@ -170,13 +182,20 @@ export async function startSolarSystem(host: SessionHost) {
   const setExpanded = (value: boolean) => {
     if (value === expanded) return;
     expanded = value;
-    if (expanded) previousOverflow = document.body.style.overflow;
+    if (expanded) {
+      previousOverflow = document.body.style.overflow;
+      previousScroll = { x: window.scrollX, y: window.scrollY };
+    }
     document.body.style.overflow = expanded ? "hidden" : previousOverflow;
     element("solar-observatory").classList.toggle("is-expanded", expanded);
     element("solar-expand").textContent = expanded
       ? "↙ Exit full screen"
       : "⛶ Full screen";
     element("solar-expand").setAttribute("aria-pressed", String(expanded));
+    if (!expanded)
+      requestAnimationFrame(() => {
+        window.scrollTo(previousScroll.x, previousScroll.y);
+      });
   };
   const dispose = () => {
     if (disposed) return;
@@ -224,7 +243,7 @@ export async function startSolarSystem(host: SessionHost) {
     renderer.domElement.tabIndex = 0;
     renderer.domElement.setAttribute(
       "aria-label",
-      "Interactive solar system. Drag to orbit, scroll or pinch to zoom. Use the planet buttons to choose a world.",
+      "Interactive solar system. Drag to orbit, scroll or pinch to zoom. Use the navigation buttons to choose the Sun or a planet.",
     );
     orbitControls = new OrbitControls(camera, renderer.domElement);
     orbitControls.enableDamping = true;
@@ -259,7 +278,7 @@ export async function startSolarSystem(host: SessionHost) {
     if (disposed) return;
     solar.update(time);
     focus(selected);
-    target.copy(solar.bodies[selected].anchor.position);
+    target.copy(solar.targets[selected].anchor.position);
     lastTarget.copy(target);
     orbitControls.target.copy(target);
     camera.position.copy(target).add(focusOffset);
@@ -279,24 +298,38 @@ export async function startSolarSystem(host: SessionHost) {
     readyMessage = `${webgpu ? "WebGPU" : "WebGL fallback"} rendering · WebAssembly orbits · Drag to orbit, scroll or pinch to zoom.`;
     status.textContent = readyMessage;
 
-    for (let index = -1; index < planets.length; index++) {
+    const selectionOrder = [-1, SUN_INDEX, ...planets.map((_, index) => index)];
+    for (const index of selectionOrder) {
       const item = document.createElement("button");
       item.type = "button";
       item.dataset.planet = String(index);
-      item.textContent = index < 0 ? "◎ Overview" : planets[index].name;
-      if (index >= 0)
-        item.style.setProperty("--planet-color", planets[index].color);
+      const name = index === SUN_INDEX ? sunInfo.name : planets[index]?.name;
+      if (index < 0) {
+        item.textContent = "◎ Overview";
+      } else {
+        const material =
+          index === SUN_INDEX
+            ? solar.sun.material
+            : solar.bodies[index].material;
+        item.append(
+          createPlanetIcon(material.map!.image as HTMLImageElement, {
+            rings: index === 5,
+            emissive: index === SUN_INDEX,
+          }),
+          document.createTextNode(name),
+        );
+      }
       item.addEventListener("click", () => focus(index), listeners);
       planetNav.appendChild(item);
       if (index < 0) continue;
       const label = document.createElement("button");
       label.type = "button";
-      label.textContent = planets[index].name;
+      label.textContent = name;
       label.tabIndex = -1; // Equivalent keyboard navigation is in planetNav.
-      label.setAttribute("aria-label", `Focus ${planets[index].name}`);
+      label.setAttribute("aria-label", `Focus ${name}`);
       label.addEventListener("click", () => focus(index), listeners);
       labelLayer.appendChild(label);
-      labelElements.push(label);
+      labelElements[index] = label;
     }
     on("solar-pause", "click", pause);
     on("solar-speed", "change", () => {
@@ -434,14 +467,14 @@ export async function startSolarSystem(host: SessionHost) {
       }
       solar.update(time);
       if (selected < 0) target.set(0, 0, 0);
-      else target.copy(solar.bodies[selected].anchor.position);
+      else target.copy(solar.targets[selected].anchor.position);
       if (session) {
         const scale =
           selected < 0
             ? physical
               ? 0.007
               : 0.12
-            : 0.23 / solar.bodies[selected].radius;
+            : 0.23 / solar.targets[selected].radius;
         solar.system.scale.setScalar(scale);
         solar.system.position
           .copy(target)
@@ -454,16 +487,13 @@ export async function startSolarSystem(host: SessionHost) {
             ),
           );
         solar.update(time);
-        const speedLabel =
-          rate === 1 / 86400
-            ? "Real time"
-            : rate === 1 / 24
-              ? "1 hour/s"
-              : `${rate} days/s`;
+        const speedLabel = speedInput.selectedOptions[0].textContent!.trim();
+        const selectedName =
+          selected === SUN_INDEX ? sunInfo.name : planets[selected]?.name;
         if (frame)
           xrInteraction?.update(
             frame,
-            `${selected < 0 ? "Solar System" : planets[selected].name} · ${new Date(time).toISOString().slice(0, 10)} · ${paused ? "Paused" : live ? "Live" : speedLabel}`,
+            `${selectedName ?? "Solar System"} · ${new Date(time).toISOString().slice(0, 10)} · ${paused ? "Paused" : live ? "Live" : speedLabel}`,
           );
         (vrRenderer ?? renderer).render(solar.scene, vrCamera);
       } else {
@@ -494,7 +524,7 @@ export async function startSolarSystem(host: SessionHost) {
           .sort((a, b) => (a === selected ? -1 : b === selected ? 1 : b - a));
         labelOrder.forEach((index) => {
           const label = labelElements[index];
-          const body = solar!.bodies[index];
+          const body = solar!.targets[index];
           projection.copy(body.anchor.position);
           const front =
             projection.clone().sub(camera.position).dot(direction) > 0;
@@ -617,7 +647,12 @@ export async function startSolarSystem(host: SessionHost) {
               select: focus,
               overview: () => focus(-1),
               pause,
-              next: () => focus((selected + 1) % planets.length),
+              next: () => {
+                const next =
+                  (selectionOrder.indexOf(selected) + 1) %
+                  selectionOrder.length;
+                focus(selectionOrder[next === 0 ? 1 : next]);
+              },
               exit: () => {
                 void currentSession.end().catch((error) => {
                   sessionStatus.textContent = message(error);

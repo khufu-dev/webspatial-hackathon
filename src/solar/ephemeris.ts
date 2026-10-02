@@ -170,6 +170,16 @@ export const planets: readonly Planet[] = [
   },
 ];
 
+export const SUN_INDEX = planets.length;
+export const sunInfo = {
+  name: "Sun",
+  kind: "G-type main-sequence star",
+  radius: 695700,
+  day: 25.38,
+  description:
+    "Our star holds the Solar System together. Deep in its core, hydrogen fuses into helium, powering the light that reaches every world.",
+};
+
 export function julianDate(time: number) {
   // UTC as a close approximation to TDB; the ~minute offset is below the
   // accuracy promised by this educational, low-precision model.

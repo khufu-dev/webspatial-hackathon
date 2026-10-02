@@ -28,7 +28,7 @@ export function bindSolarXR(
     actions.next,
     actions.exit,
   ];
-  const labels = ["Overview", "Pause / play", "Next planet", "Exit VR"];
+  const labels = ["Overview", "Pause / play", "Next body", "Exit VR"];
   for (let index = 0; index < labels.length; index++) {
     const canvas = document.createElement("canvas");
     canvas.width = 512;
