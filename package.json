@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "build:wasm": "node scripts/build-orbits.mjs",
+    "test:solar": "node --experimental-strip-types --test tests/solar.test.mjs",
     "lint": "tsc --build",
-    "build": "npm run lint && vite build",
+    "build": "npm run build:wasm && npm run lint && vite build",
     "preview": "npm run build && vite preview --host --port 5173",
     "avp": "npm run build && webspatial-builder run --base=http://localhost:5173",
     "format": "prettier --write \"**/*.{ts,tsx,css,json,html,md}\""
@@ -19,15 +21,16 @@
     "three": "^0.186.1"
   },
   "devDependencies": {
-    "prettier": "latest",
+    "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
-    "@types/node": "latest",
     "@types/three": "^0.186.0",
-    "typescript": "latest",
+    "@vitejs/plugin-react": "latest",
     "@webspatial/builder": "latest",
     "@webspatial/platform-visionos": "latest",
+    "prettier": "latest",
+    "typescript": "latest",
     "vite": "latest",
-    "@vitejs/plugin-react": "latest"
+    "wabt": "^1.0.39"
   }
 }

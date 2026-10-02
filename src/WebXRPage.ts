@@ -1,6 +1,7 @@
 import * as THREE from "three/webgpu";
 import { WebGLRenderer } from "three";
 import { createScene, type DemoObject } from "./WebXRScenes";
+import { startSolarSystem } from "./solar/SolarSystem";
 import {
   bindCanvasInteractions,
   bindXRInteractions,
@@ -30,6 +31,7 @@ type ImmersiveControl = {
   button: HTMLButtonElement;
   status: HTMLParagraphElement;
   available: boolean;
+  enterLabel?: string;
 };
 const controls: ImmersiveControl[] = [
   {
@@ -43,6 +45,13 @@ const controls: ImmersiveControl[] = [
     button: element("ar-button"),
     status: element("ar-session-status"),
     available: false,
+  },
+  {
+    mode: "immersive-vr",
+    button: element("solar-vr-button"),
+    status: element("solar-session-status"),
+    available: false,
+    enterLabel: "Enter solar VR ↗",
   },
 ];
 let activeSession: XRSession | undefined;
@@ -64,9 +73,8 @@ function updateControls() {
         ? control.mode === "immersive-ar"
           ? "Exit AR"
           : "Exit VR"
-        : control.mode === "immersive-ar"
-          ? "Open in AR"
-          : "Enter VR";
+        : (control.enterLabel ??
+          (control.mode === "immersive-ar" ? "Open in AR" : "Enter VR"));
   }
 }
 
@@ -433,6 +441,34 @@ async function initializeStereo() {
     }
   });
 }
+
+// Load the larger observatory as it approaches the viewport.
+const solarObserver = new IntersectionObserver(
+  (entries) => {
+    if (!entries.some((entry) => entry.isIntersecting)) return;
+    solarObserver.disconnect();
+    void startSolarSystem({
+      busy: () => !!activeSession || requestingSession,
+      availability: (available) => {
+        controls[2].available = available;
+        updateControls();
+      },
+      state: (session, pending) => {
+        activeSession = session;
+        activeControl = session ? controls[2] : undefined;
+        requestingSession = pending;
+        if (session)
+          canvasInteractions.forEach((interaction) => interaction.reset());
+        updateControls();
+      },
+    }).catch((error) => {
+      element("solar-render-status").textContent =
+        `Solar observatory unavailable: ${message(error)}`;
+    });
+  },
+  { rootMargin: "300px" },
+);
+solarObserver.observe(element("solar-section"));
 
 // Initialize sections independently so unavailable modes do not block the others.
 void Promise.all([

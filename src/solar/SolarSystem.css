@@ -1,0 +1,508 @@
+.solar-observatory {
+  --solar-ink: #eaf0f5;
+  --solar-muted: #9caebd;
+  --solar-line: #ffffff16;
+  color-scheme: dark;
+  color: var(--solar-ink);
+  background: #070c14;
+  border: 1px solid #263341;
+  border-radius: 16px;
+  overflow: hidden;
+  font-size: 13px;
+  isolation: isolate;
+}
+
+.solar-observatory * {
+  box-sizing: border-box;
+}
+.solar-observatory [hidden] {
+  display: none !important;
+}
+.solar-observatory button,
+.solar-observatory select,
+.solar-observatory input {
+  font: inherit;
+  color: var(--solar-ink);
+}
+.solar-observatory button,
+.solar-observatory select,
+.solar-observatory input[type="date"] {
+  min-height: 36px;
+  background: #121c28;
+  border: 1px solid #ffffff20;
+  border-radius: 7px;
+  padding: 7px 12px;
+}
+.solar-observatory button {
+  cursor: pointer;
+  transition:
+    background 150ms,
+    border-color 150ms;
+}
+.solar-observatory button:hover:not(:disabled) {
+  background: #233445;
+  border-color: #a2c6d577;
+}
+.solar-observatory button:disabled,
+.solar-observatory select:disabled {
+  opacity: 0.45;
+  cursor: wait;
+}
+.solar-observatory :focus-visible {
+  outline: 2px solid #b0e5f0;
+  outline-offset: 3px;
+}
+.solar-header,
+.solar-footer,
+.solar-timeline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 26px;
+}
+.solar-header {
+  background: #0d1420;
+}
+.solar-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: 650;
+}
+.solar-brand > span {
+  color: #f0d69e;
+  font-size: 35px;
+  font-weight: 300;
+}
+.solar-brand small {
+  display: block;
+  margin-top: 6px;
+  color: var(--solar-muted);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+}
+.solar-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.solar-badges span {
+  padding: 5px 9px;
+  border: 1px solid #89caca33;
+  color: #a8d9d6;
+  border-radius: 5px;
+  font:
+    10px ui-monospace,
+    monospace;
+}
+.solar-planets {
+  display: flex;
+  gap: 4px;
+  min-height: 58px;
+  align-items: center;
+  padding: 10px 22px;
+  overflow-x: auto;
+  border-top: 1px solid var(--solar-line);
+  border-bottom: 1px solid var(--solar-line);
+}
+.solar-planets button {
+  white-space: nowrap;
+  border-color: transparent;
+  background: transparent;
+  color: var(--solar-muted);
+  font-size: 12px;
+}
+.solar-planets button:not(:first-child)::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--planet-color);
+}
+.solar-planets button[aria-pressed="true"] {
+  color: #fff2d2;
+  background: #d7b97815;
+  border-color: #d7b97840;
+}
+.solar-viewport {
+  position: relative;
+  height: clamp(460px, 54vw, 690px);
+  overflow: hidden;
+  background: #02040a;
+}
+.solar-canvas {
+  position: absolute;
+  inset: 0;
+}
+.solar-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+.solar-canvas canvas:active {
+  cursor: grabbing;
+}
+.solar-info {
+  position: absolute;
+  top: 44px;
+  left: 30px;
+  width: 238px;
+  padding: 18px;
+  border: 1px solid #ffffff0c;
+  border-radius: 10px;
+  background: #060b13bc;
+  pointer-events: none;
+}
+.solar-eyebrow {
+  color: #c4af89;
+  letter-spacing: 2px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin: 0;
+}
+.solar-info h3 {
+  font-size: clamp(32px, 4vw, 54px);
+  line-height: 1.1;
+  font-weight: 350;
+  letter-spacing: -1.5px;
+  margin: 14px 0 16px;
+}
+.solar-info > p:not(.solar-eyebrow) {
+  color: #acbac7;
+  font-size: 12px;
+  line-height: 1.8;
+  margin: 0;
+}
+.solar-info dl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 23px 12px;
+  padding-top: 25px;
+  margin: 24px 0 0;
+  border-top: 1px solid var(--solar-line);
+}
+.solar-info dt {
+  font-size: 9px;
+  color: var(--solar-muted);
+  margin-bottom: 8px;
+}
+.solar-info dd {
+  margin: 0;
+  font:
+    12px ui-monospace,
+    monospace;
+  color: #e9ddd0;
+}
+.solar-view-tools {
+  position: absolute;
+  display: flex;
+  gap: 7px;
+  right: 22px;
+  top: 20px;
+}
+.solar-view-tools button {
+  background: #0d1522b8;
+  font-size: 11px;
+}
+.solar-view-caption {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  left: 30px;
+  right: 30px;
+  bottom: 22px;
+  pointer-events: none;
+}
+.solar-view-caption span {
+  color: #a4b7c9;
+  font:
+    9px ui-monospace,
+    monospace;
+  text-shadow: 0 1px 6px black;
+}
+.solar-view-caption span:last-child {
+  letter-spacing: 1.3px;
+  color: #a1a8b6;
+}
+.solar-label-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.solar-label-layer button {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  min-height: 26px;
+  padding: 3px 8px;
+  border-color: transparent;
+  background: #07101a88;
+  font-size: 10px;
+  color: #afbed1;
+  pointer-events: auto;
+}
+.solar-label-layer button.selected {
+  color: #f1d7a2;
+}
+.solar-label-layer button::before {
+  content: "·";
+  padding-right: 5px;
+}
+.solar-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #050a12;
+  color: var(--solar-muted);
+  font:
+    12px ui-monospace,
+    monospace;
+}
+.solar-loader {
+  width: 44px;
+  height: 44px;
+  border: 1px solid #d5be8033;
+  border-top-color: #d5be80;
+  border-radius: 50%;
+  animation: solar-spin 1.8s linear infinite;
+  margin-bottom: 20px;
+}
+@keyframes solar-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.solar-timeline {
+  border-top: 1px solid var(--solar-line);
+  background: #0e1622;
+  flex-wrap: wrap;
+}
+.solar-time-readout {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.solar-time-readout time {
+  font:
+    12px ui-monospace,
+    monospace;
+  font-variant-numeric: tabular-nums;
+  color: #e4e9ef;
+}
+.solar-time-controls {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.solar-time-controls label,
+.solar-options label:not(.solar-check) {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: var(--solar-muted);
+  font-size: 10px;
+}
+.solar-time-controls select,
+.solar-time-controls input {
+  font-size: 12px;
+}
+.solar-footer {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border-top: 1px solid var(--solar-line);
+}
+.solar-options {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+.solar-options label:not(.solar-check) {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+.solar-check {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  color: var(--solar-muted);
+  cursor: pointer;
+}
+.solar-check input {
+  accent-color: #d1b881;
+  width: 15px;
+  height: 15px;
+}
+.solar-observatory .solar-vr-button {
+  white-space: nowrap;
+  padding: 10px 18px;
+  background: #dfc99a;
+  color: #111922;
+  font-weight: 600;
+}
+.solar-observatory .solar-vr-button:hover:not(:disabled) {
+  background: #f0dcad;
+}
+.solar-observatory .solar-vr-button:disabled {
+  cursor: not-allowed;
+}
+.solar-notes {
+  max-width: 950px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.solar-credits {
+  margin: 0;
+  padding: 10px 26px;
+  border-top: 1px solid var(--solar-line);
+  color: var(--solar-muted);
+  font-size: 10px;
+  line-height: 1.6;
+}
+.solar-credits a {
+  color: #b5cbd8;
+}
+.solar-notes summary {
+  cursor: pointer;
+}
+.solar-observatory.is-expanded {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+.solar-observatory:is(:fullscreen, .is-expanded) {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.solar-observatory:is(:fullscreen, .is-expanded) .solar-viewport {
+  flex: 1;
+  min-height: 260px;
+  height: auto;
+}
+.solar-observatory:is(:fullscreen, .is-expanded) .solar-info {
+  top: 40px;
+  bottom: auto;
+}
+@media (min-width: 1000px) {
+  .solar-canvas,
+  .solar-label-layer {
+    left: 180px;
+  }
+}
+@media (max-width: 760px) {
+  .solar-header,
+  .solar-footer,
+  .solar-timeline {
+    padding: 16px;
+    gap: 14px;
+  }
+  .solar-header {
+    align-items: start;
+  }
+  .solar-brand {
+    font-size: 10px;
+    letter-spacing: 1.1px;
+    gap: 8px;
+  }
+  .solar-brand small {
+    max-width: 165px;
+    font-size: 10px;
+    line-height: 1.5;
+  }
+  .solar-badges {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .solar-badges span {
+    font-size: 9px;
+  }
+  .solar-planets {
+    padding: 8px 12px;
+  }
+  .solar-viewport {
+    height: 560px;
+  }
+  .solar-observatory:is(:fullscreen, .is-expanded) .solar-info {
+    display: none;
+  }
+  .solar-info {
+    top: auto;
+    left: 14px;
+    bottom: 48px;
+    width: min(260px, 75%);
+    padding: 13px;
+  }
+  .solar-info h3 {
+    font-size: 30px;
+    margin: 7px 0;
+  }
+  .solar-info > p:not(.solar-eyebrow) {
+    font-size: 11px;
+    line-height: 1.55;
+  }
+  .solar-info dl {
+    display: none;
+  }
+  .solar-view-tools {
+    top: 12px;
+    right: 12px;
+  }
+  .solar-view-caption {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+  .solar-view-caption span:last-child {
+    display: none;
+  }
+  .solar-time-controls {
+    gap: 8px;
+  }
+  .solar-options {
+    gap: 12px;
+  }
+  .solar-footer {
+    align-items: start;
+    flex-direction: column;
+  }
+  .solar-footer .solar-vr-button {
+    width: 100%;
+  }
+  .solar-time-controls label {
+    flex: 1;
+  }
+  .solar-time-controls input,
+  .solar-time-controls select {
+    max-width: 100%;
+    min-width: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .solar-loader {
+    animation: none;
+  }
+  .solar-observatory button {
+    transition: none;
+  }
+}

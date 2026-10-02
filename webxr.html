@@ -100,6 +100,235 @@
           Checking inline stereo support.
         </p>
       </section>
+
+      <section id="solar-section" aria-labelledby="solar-heading">
+        <h2 id="solar-heading">5. Solar System · WebXR + WASM + WebGPU</h2>
+        <p>
+          Travel from our home world to the ice giants. Choose a planet, change
+          the date, or step inside in VR.
+        </p>
+        <div id="solar-observatory" class="solar-observatory">
+          <header class="solar-header">
+            <div class="solar-brand">
+              <span aria-hidden="true">✳︎</span>
+              <div>
+                SOLAR OBSERVATORY<small
+                  >A little perspective on our place in space.</small
+                >
+              </div>
+            </div>
+            <div class="solar-badges" aria-label="Rendering capabilities">
+              <span id="solar-backend">Starting renderer</span
+              ><span id="solar-wasm">Loading WASM</span>
+            </div>
+          </header>
+          <nav
+            id="solar-planets"
+            class="solar-planets"
+            aria-label="Explore planets"
+          ></nav>
+          <div id="solar-viewport" class="solar-viewport">
+            <div id="solar-canvas" class="solar-canvas"></div>
+            <div id="solar-label-layer" class="solar-label-layer"></div>
+            <aside class="solar-info" aria-label="Selected world">
+              <p id="solar-object-type" class="solar-eyebrow">GAS GIANT</p>
+              <h3 id="solar-object-name">Saturn</h3>
+              <p id="solar-description">
+                Countless fragments of ice circle a pale golden world.
+              </p>
+              <dl>
+                <div>
+                  <dt id="solar-radius-label">Mean radius</dt>
+                  <dd id="solar-radius">58,232 km</dd>
+                </div>
+                <div>
+                  <dt id="solar-distance-label">Distance to Sun</dt>
+                  <dd id="solar-distance">—</dd>
+                </div>
+                <div>
+                  <dt id="solar-period-label">Orbital period</dt>
+                  <dd id="solar-period">29.46 yr</dd>
+                </div>
+                <div>
+                  <dt id="solar-day-label">Sidereal day</dt>
+                  <dd id="solar-day">10.66 h</dd>
+                </div>
+              </dl>
+            </aside>
+            <div class="solar-view-tools">
+              <button
+                id="solar-reset"
+                type="button"
+                data-solar-control
+                disabled
+              >
+                ↺ Reset view
+              </button>
+              <button
+                id="solar-expand"
+                type="button"
+                data-solar-control
+                disabled
+              >
+                ⛶ Full screen
+              </button>
+            </div>
+            <div class="solar-view-caption">
+              <span id="solar-lens"
+                >Distances compressed · planets enlarged</span
+              ><span>DRAG TO ORBIT · SCROLL TO EXPLORE</span>
+            </div>
+            <div id="solar-loading" class="solar-loading" role="status">
+              <span class="solar-loader" aria-hidden="true"></span>
+              <p id="solar-loading-text">Preparing the observatory…</p>
+            </div>
+          </div>
+          <div class="solar-timeline">
+            <div class="solar-time-readout">
+              <span class="solar-eyebrow">SIMULATION TIME</span
+              ><time id="solar-clock">—</time>
+            </div>
+            <div class="solar-time-controls">
+              <button
+                id="solar-pause"
+                type="button"
+                aria-pressed="false"
+                data-solar-control
+                disabled
+              >
+                Ⅱ Pause
+              </button>
+              <label
+                >Time speed<select id="solar-speed" data-solar-control disabled>
+                  <option value="-30">−30 days / sec</option>
+                  <option value="-1">−1 day / sec</option>
+                  <option value="0.000011574074074074073" selected>
+                    Real time
+                  </option>
+                  <option value="0.041666666666666664">1 hour / sec</option>
+                  <option value="1">1 day / sec</option>
+                  <option value="30">30 days / sec</option>
+                  <option value="365">1 year / sec</option>
+                </select></label
+              >
+              <label
+                >Jump to date<input
+                  id="solar-date"
+                  type="date"
+                  min="1800-01-01"
+                  max="2050-01-01"
+                  data-solar-control
+                  disabled
+              /></label>
+              <button id="solar-now" type="button" data-solar-control disabled>
+                ↗ Now
+              </button>
+            </div>
+          </div>
+          <div class="solar-footer">
+            <div class="solar-options">
+              <label
+                >Scale<select id="solar-scale" data-solar-control disabled>
+                  <option value="display">Explore</option>
+                  <option value="physical">True scale</option>
+                </select></label
+              >
+              <label class="solar-check"
+                ><input
+                  id="solar-labels"
+                  type="checkbox"
+                  checked
+                  data-solar-control
+                  disabled
+                />
+                Labels</label
+              >
+            </div>
+            <button
+              id="solar-vr-button"
+              class="solar-vr-button"
+              type="button"
+              disabled
+            >
+              Enter solar VR ↗
+            </button>
+          </div>
+          <p class="solar-credits">
+            Planet maps:
+            <a
+              href="https://www.solarsystemscope.com/textures/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Solar System Scope</a
+            >
+            · Milky Way:
+            <a
+              href="https://www.eso.org/public/images/eso0932a/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >ESO/S. Brunier</a
+            >
+            ·
+            <a
+              href="https://creativecommons.org/licenses/by/4.0/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >CC BY 4.0</a
+            >
+          </p>
+        </div>
+        <p id="solar-render-status" role="status">
+          The observatory loads when this section is in view.
+        </p>
+        <p id="solar-session-status" role="status">
+          Checking immersive VR support.
+        </p>
+        <details class="solar-notes">
+          <summary>About the model, controls &amp; visual references</summary>
+          <p>
+            On screen, drag to orbit and scroll or pinch to zoom. Select a
+            planet in the view or the navigation bar. In VR, point with a
+            controller or hand and select a planet; use the floating Overview,
+            Pause / play, Next planet, and Exit VR controls. Your head movement
+            stays independent of the model.
+          </p>
+          <p>
+            Positions use
+            <a
+              href="https://ssd.jpl.nasa.gov/planets/approx_pos.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              >JPL’s approximate Keplerian elements</a
+            >
+            with secular rates, evaluated by a double-precision WebAssembly
+            solver. Dates are limited to 1800–2050. Earth uses the Earth–Moon
+            barycenter, and UTC approximates dynamical time. This is an
+            educational model, not a navigation ephemeris. Moons and
+            gravitational perturbations are not simulated.
+          </p>
+          <p>
+            Explore scale compresses orbital distances and enlarges planets.
+            True scale uses one linear scale for distances and radii; planets
+            are tiny in the overview, so use the navigation bar to visit them.
+            Rotation rates and axial tilts are modeled; prime meridians and pole
+            directions are illustrative. Sunlight direction is geometric, with
+            exposure balanced to keep distant planets visible.
+          </p>
+          <p>
+            Inspired by
+            <a
+              href="https://x.com/Dimillian/status/2098102059648139574"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Thomas Ricouard’s Astra demonstration</a
+            >. Planetary maps are from Solar System Scope, based on NASA
+            imagery. The celestial panorama is ESO/S. Brunier’s eso0932a,
+            displayed with reduced exposure and an illustrative orientation. The
+            2K planetary maps and 4K panorama are stored locally; cloud opacity,
+            sunlight, and atmospheric scattering are applied during rendering.
+          </p>
+        </details>
+      </section>
     </main>
     <script type="module" src="/src/WebXRPage.ts"></script>
   </body>
