@@ -61,8 +61,17 @@ rings include the Cassini Division and an analytic planet shadow.
 **Enter solar VR** requests `immersive-vr` with `local` reference space.
 Browsers exposing `XRGPUBinding` use the required `webgpu` session feature;
 other headsets use Three.js's WebGL backend for the same scene. Point and
-select the Sun, planets, or the floating Overview, Pause / play, Next body, and Exit VR
-controls. Immersive sessions are coordinated with sections 2–4. HTTPS or
+select the Sun or planets directly, or open the floating **Planets** menu for
+textured destination buttons. **Time speed** offers the same rates as the page,
+including reverse, real time, and **1 week / sec**. Options highlight the current
+selection and close when chosen; selecting a menu button again dismisses it.
+Changing speed preserves the pause state. Overview, Pause / play, and Exit VR
+remain available, and changes carry back to the page.
+A badge below the VR controls shows the active **WebGPU** or **WebGL** renderer.
+Switching between destinations animates a pullback, pan, and approach over
+1.4 seconds, including while playback is paused. Head tracking stays independent;
+reduced-motion preferences make destination changes immediate.
+Immersive sessions are coordinated with sections 2–4. HTTPS or
 localhost and a compatible headset/browser are required.
 
 JPL's approximate 1800–2050 elements include eccentricity, inclination and
@@ -73,7 +82,7 @@ page and in [the texture manifest notes](public/solar/README.md).
 
 ```bash
 npm run build:wasm  # Rebuild src/solar/orbits.wasm from its readable WAT source
-npm run test:solar  # Orbital mathematics, time controls, asset integrity (Node 22.6+)
+npm run test:solar  # Orbits, VR menus/transitions, time, assets (Node 22.6+)
 npm run build      # Rebuilds WASM, checks TypeScript, builds all pages
 ```
 

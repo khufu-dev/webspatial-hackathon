@@ -1,75 +1,20 @@
 import * as THREE from "three/webgpu";
 import type { SolarScene } from "./SolarScene";
-
-type Actions = {
-  select: (index: number) => void;
-  overview: () => void;
-  pause: () => void;
-  next: () => void;
-  exit: () => void;
-};
+import {
+  createSolarXRPanel,
+  type XRPanelActions,
+  type XRPanelOptions,
+} from "./SolarXRPanel.ts";
 
 export function bindSolarXR(
   session: XRSession,
   renderer: THREE.WebGPURenderer,
   solar: SolarScene,
-  actions: Actions,
+  actions: XRPanelActions,
+  options: XRPanelOptions,
 ) {
-  const panel = new THREE.Group();
-  panel.position.set(0, -0.5, -1.25);
-  panel.rotation.x = -0.22;
-  solar.scene.add(panel);
-  const buttonGeometry = new THREE.PlaneGeometry(0.27, 0.09);
-  const uiTextures: THREE.CanvasTexture[] = [];
-  const buttons: THREE.Mesh[] = [];
-  const buttonActions = [
-    actions.overview,
-    actions.pause,
-    actions.next,
-    actions.exit,
-  ];
-  const labels = ["Overview", "Pause / play", "Next body", "Exit VR"];
-  for (let index = 0; index < labels.length; index++) {
-    const canvas = document.createElement("canvas");
-    canvas.width = 512;
-    canvas.height = 160;
-    const context = canvas.getContext("2d")!;
-    context.fillStyle = "#13202f";
-    context.fillRect(0, 0, 512, 160);
-    context.strokeStyle = "#8eb8c8";
-    context.lineWidth = 3;
-    context.strokeRect(2, 2, 508, 156);
-    context.fillStyle = "#edf7ff";
-    context.font = "40px system-ui";
-    context.textAlign = "center";
-    context.textBaseline = "middle";
-    context.fillText(labels[index], 256, 80);
-    const map = new THREE.CanvasTexture(canvas);
-    map.colorSpace = THREE.SRGBColorSpace;
-    uiTextures.push(map);
-    const button = new THREE.Mesh(
-      buttonGeometry,
-      new THREE.MeshBasicMaterial({ map }),
-    );
-    button.position.x = (index - 1.5) * 0.29;
-    button.userData.action = buttonActions[index];
-    panel.add(button);
-    buttons.push(button);
-  }
-  const readoutCanvas = document.createElement("canvas");
-  readoutCanvas.width = 1536;
-  readoutCanvas.height = 128;
-  const readoutContext = readoutCanvas.getContext("2d")!;
-  const readoutTexture = new THREE.CanvasTexture(readoutCanvas);
-  readoutTexture.colorSpace = THREE.SRGBColorSpace;
-  uiTextures.push(readoutTexture);
-  const readout = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.14, 0.095),
-    new THREE.MeshBasicMaterial({ map: readoutTexture, transparent: true }),
-  );
-  readout.position.y = 0.11;
-  panel.add(readout);
-  let previousReadout = "";
+  const panel = createSolarXRPanel(actions, options);
+  solar.scene.add(panel.object);
   const raycaster = new THREE.Raycaster();
   const matrix = new THREE.Matrix4();
   const rays = new Map<XRInputSource, THREE.Line>();
@@ -93,10 +38,10 @@ export function bindSolarXR(
     return true;
   };
   const hit = () => {
-    panel.updateWorldMatrix(true, true);
+    panel.object.updateWorldMatrix(true, true);
     solar.system.updateWorldMatrix(true, true);
     return raycaster.intersectObjects(
-      [...buttons, ...solar.pickable],
+      [...panel.pickable(), ...solar.pickable],
       false,
     )[0];
   };
@@ -115,12 +60,7 @@ export function bindSolarXR(
   session.addEventListener("select", select);
   const dispose = () => {
     session.removeEventListener("select", select);
-    panel.removeFromParent();
-    buttons.forEach((button) => (button.material as THREE.Material).dispose());
-    buttonGeometry.dispose();
-    readout.geometry.dispose();
-    readout.material.dispose();
-    uiTextures.forEach((item) => item.dispose());
+    panel.dispose();
     rays.forEach((ray) => ray.removeFromParent());
     rays.clear();
     lineGeometry.dispose();
@@ -129,16 +69,7 @@ export function bindSolarXR(
   session.addEventListener("end", dispose, { once: true });
   return {
     update(frame: XRFrame, text: string) {
-      if (text !== previousReadout) {
-        readoutContext.clearRect(0, 0, 1536, 128);
-        readoutContext.fillStyle = "#edf7ff";
-        readoutContext.font = "38px system-ui";
-        readoutContext.textAlign = "center";
-        readoutContext.textBaseline = "middle";
-        readoutContext.fillText(text, 768, 64, 1500);
-        readoutTexture.needsUpdate = true;
-        previousReadout = text;
-      }
+      const pointedAt: THREE.Object3D[] = [];
       for (const [source, ray] of rays) {
         if (!Array.from(session.inputSources).includes(source)) {
           ray.removeFromParent();
@@ -157,8 +88,12 @@ export function bindSolarXR(
         if (!ray.visible) continue;
         ray.position.copy(raycaster.ray.origin);
         ray.quaternion.setFromRotationMatrix(matrix);
-        ray.scale.z = Math.min(hit()?.distance ?? 3, 8);
+        const intersection = hit();
+        ray.scale.z = Math.min(intersection?.distance ?? 3, 8);
+        if (intersection) pointedAt.push(intersection.object);
       }
+      panel.setHovered(pointedAt);
+      panel.update(text);
     },
   };
 }

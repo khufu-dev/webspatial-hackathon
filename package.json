@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build:wasm": "node scripts/build-orbits.mjs",
-    "test:solar": "node --experimental-strip-types --test tests/solar.test.mjs",
+    "test:solar": "node --experimental-strip-types --test tests/solar.test.mjs tests/solar-xr.test.mjs",
     "lint": "tsc --build",
     "build": "npm run build:wasm && npm run lint && vite build",
     "preview": "npm run build && vite preview --host --port 5173",

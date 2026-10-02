@@ -11,6 +11,7 @@ import {
 } from "./ephemeris";
 import { createSolarScene, type SolarScene } from "./SolarScene";
 import { bindSolarXR } from "./SolarXR";
+import { createSolarXRTransition, type XRView } from "./SolarXRTransition";
 import { createPlanetIcon } from "./PlanetIcon";
 import "./SolarSystem.css";
 
@@ -45,6 +46,7 @@ export async function startSolarSystem(host: SessionHost) {
   let renderer: THREE.WebGPURenderer | undefined;
   let vrRenderer: THREE.WebGPURenderer | undefined;
   let solar: SolarScene | undefined;
+  let xrTransition: ReturnType<typeof createSolarXRTransition> | undefined;
   let disposed = false;
   let observer: ResizeObserver | undefined;
   let visibilityObserver: IntersectionObserver | undefined;
@@ -58,7 +60,8 @@ export async function startSolarSystem(host: SessionHost) {
   let expanded = false;
   let previousOverflow = "";
   let previousScroll = { x: 0, y: 0 };
-  let paused = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let paused = reducedMotion.matches;
   let live = false;
   let rate = Number(speedInput.value);
   let time = Math.min(MAX_TIME, Math.max(MIN_TIME, Date.now()));
@@ -144,7 +147,15 @@ export async function startSolarSystem(host: SessionHost) {
     viewport.dataset.selectedPlanet = object?.name ?? "overview";
     viewport.dataset.simulationTime = String(time);
   };
+  const selectSpeed = (value: number) => {
+    rate = value;
+    speedInput.value = String(value);
+    live = false;
+    previousFrame = 0;
+    updateStats();
+  };
   const focus = (index: number) => {
+    if (session && selected !== index) xrTransition?.start();
     selected = index;
     if (!solar || !orbitControls) return;
     if (selected < 0) {
@@ -224,6 +235,7 @@ export async function startSolarSystem(host: SessionHost) {
     status.textContent = "Loading WebAssembly orbital engine…";
     const kernel = await loadOrbitKernel();
     solar = createSolarScene(kernel);
+    xrTransition = createSolarXRTransition(solar.system);
     renderer = new THREE.WebGPURenderer({
       antialias: true,
       powerPreference: "high-performance",
@@ -333,9 +345,7 @@ export async function startSolarSystem(host: SessionHost) {
     }
     on("solar-pause", "click", pause);
     on("solar-speed", "change", () => {
-      rate = Number(speedInput.value);
-      live = false;
-      previousFrame = 0;
+      selectSpeed(Number(speedInput.value));
     });
     on("solar-date", "change", () => {
       const next = dateInput.valueAsNumber;
@@ -442,6 +452,23 @@ export async function startSolarSystem(host: SessionHost) {
     const projection = new THREE.Vector3();
     const direction = new THREE.Vector3();
     let xrInteraction: ReturnType<typeof bindSolarXR> | undefined;
+    const xrView: XRView = {
+      focus: new THREE.Vector3(),
+      placement: new THREE.Vector3(),
+      scale: 1,
+      overviewScale: 0.12,
+    };
+    const getXRView = () => {
+      const overview = selected < 0;
+      xrView.overviewScale = physical ? 0.007 : 0.12;
+      xrView.scale = overview
+        ? xrView.overviewScale
+        : 0.23 / solar!.targets[selected].radius;
+      if (overview) xrView.focus.set(0, 0, 0);
+      else xrView.focus.copy(solar!.targets[selected].anchor.position);
+      xrView.placement.set(0, overview ? -0.25 : 0.03, overview ? -3 : -1.8);
+      return xrView;
+    };
     const animate = (now: number, frame?: XRFrame) => {
       if (disposed || !solar || !renderer || !orbitControls) return;
       const seconds = previousFrame
@@ -469,23 +496,7 @@ export async function startSolarSystem(host: SessionHost) {
       if (selected < 0) target.set(0, 0, 0);
       else target.copy(solar.targets[selected].anchor.position);
       if (session) {
-        const scale =
-          selected < 0
-            ? physical
-              ? 0.007
-              : 0.12
-            : 0.23 / solar.targets[selected].radius;
-        solar.system.scale.setScalar(scale);
-        solar.system.position
-          .copy(target)
-          .multiplyScalar(-scale)
-          .add(
-            new THREE.Vector3(
-              0,
-              selected < 0 ? -0.25 : 0.03,
-              selected < 0 ? -3 : -1.8,
-            ),
-          );
+        xrTransition!.update(getXRView(), seconds, reducedMotion.matches);
         solar.update(time);
         const speedLabel = speedInput.selectedOptions[0].textContent!.trim();
         const selectedName =
@@ -498,10 +509,7 @@ export async function startSolarSystem(host: SessionHost) {
         (vrRenderer ?? renderer).render(solar.scene, vrCamera);
       } else {
         if (transitioning) {
-          const amount = window.matchMedia("(prefers-reduced-motion: reduce)")
-            .matches
-            ? 1
-            : 1 - Math.exp(-seconds * 5);
+          const amount = reducedMotion.matches ? 1 : 1 - Math.exp(-seconds * 5);
           orbitControls.target.lerp(target, amount);
           camera.position.lerp(target.clone().add(focusOffset), amount);
           if (
@@ -636,28 +644,47 @@ export async function startSolarSystem(host: SessionHost) {
           }
           if (ended || disposed) return;
           const immersiveRenderer = vrRenderer ?? renderer!;
+          const immersiveBackend =
+            immersiveRenderer.backend instanceof THREE.WebGPUBackend
+              ? "WebGPU"
+              : "WebGL";
           orbitControls!.enabled = false;
           labelLayer.hidden = true;
           focus(-1);
+          xrTransition!.reset(getXRView());
           xrInteraction = bindSolarXR(
             currentSession,
             immersiveRenderer,
             solar!,
             {
               select: focus,
+              speed: selectSpeed,
               overview: () => focus(-1),
               pause,
-              next: () => {
-                const next =
-                  (selectionOrder.indexOf(selected) + 1) %
-                  selectionOrder.length;
-                focus(selectionOrder[next === 0 ? 1 : next]);
-              },
               exit: () => {
                 void currentSession.end().catch((error) => {
                   sessionStatus.textContent = message(error);
                 });
               },
+            },
+            {
+              backend: immersiveBackend,
+              planets: Array.from(
+                planetNav.querySelectorAll<HTMLButtonElement>("button"),
+                (item) => ({
+                  value: Number(item.dataset.planet),
+                  label:
+                    Number(item.dataset.planet) < 0
+                      ? "Overview"
+                      : item.textContent!.trim(),
+                  icon: item.querySelector("canvas") ?? undefined,
+                }),
+              ),
+              speeds: Array.from(speedInput.options, (option) => ({
+                value: Number(option.value),
+                label: option.textContent!.trim(),
+              })),
+              getState: () => ({ selected, speed: rate, paused }),
             },
           );
           await renderer!.setAnimationLoop(null);
@@ -670,7 +697,7 @@ export async function startSolarSystem(host: SessionHost) {
           }
           await immersiveRenderer.xr.setSession(currentSession);
           if (ended) return;
-          sessionStatus.textContent = `Immersive VR is active · ${nativeGPU ? "WebGPU" : "WebGL compatibility"} · Point and select to explore.`;
+          sessionStatus.textContent = `Immersive VR is active · ${immersiveBackend} · Point and select to explore.`;
           host.state(currentSession, false);
         } catch (error) {
           await candidate?.end().catch(() => {});
