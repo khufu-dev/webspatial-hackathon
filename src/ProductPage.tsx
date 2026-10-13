@@ -1,7 +1,7 @@
 import { products } from "./data/products";
 import { mountPage } from "./mountPage";
 import type { ModelRef } from "@webspatial/react-sdk";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Model3D from "./components/Model3D";
 
 const ROTATION_DEGREES_PER_SECOND = 30;
