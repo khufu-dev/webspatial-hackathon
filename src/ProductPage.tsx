@@ -96,7 +96,12 @@ export default function ProductPage() {
           <dd>{product.description}</dd>
           <dt>Price</dt>
           <dd>${product.price.toFixed(2)}</dd>
-          <dt>Extents</dt>
+          <dt>Container size (px)</dt>
+          <dd>
+            ({modelRef?.current?.offsetWidth}, {modelRef?.current?.offsetHeight}
+            )
+          </dd>
+          <dt>Extents (m SI)</dt>
           <dd>{formatVector(modelMetrics?.boundingBoxExtents)}</dd>
           <dt>Center</dt>
           <dd>{formatVector(modelMetrics?.boundingBoxCenter)}</dd>
