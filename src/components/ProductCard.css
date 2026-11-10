@@ -23,8 +23,10 @@
   }
 
   .product-3D {
+    spatial: page;
     width: 100%;
     height: 200px;
+    depth: 150px;
     --xr-depth: 150px;
     background-color: grey;
   }

@@ -4,7 +4,9 @@
   margin: auto;
   width: min(calc(95vh - 300px), calc(100vw - 16px));
   height: min(calc(95vh - 300px), calc(100vw - 16px));
+  depth: 400px;
   --xr-depth: 400px;
+  back: 200px;
   --xr-back: 200px;
   min-width: 200px;
   min-height: 200px;
