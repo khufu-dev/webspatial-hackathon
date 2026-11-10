@@ -6,12 +6,6 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
 
-  .product-model {
-    width: "100px";
-    height: "200px";
-    --xr-depth: 100;
-  }
-
   .product-name {
     margin: 0.75rem 0 0.25rem;
     font-size: 1rem;
