@@ -23,7 +23,6 @@
   }
 
   .product-3D {
-    spatial: page;
     width: 100%;
     height: 200px;
     depth: 150px;

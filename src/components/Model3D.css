@@ -1,4 +1,5 @@
 .model3D {
+  spatial: page;
   display: block;
 
   img {
