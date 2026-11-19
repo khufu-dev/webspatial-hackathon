@@ -48,21 +48,22 @@ export default function ProductPage() {
       if (!mounted) return;
 
       const { boundingBoxExtents, boundingBoxCenter, entityTransform } = model;
+      // @TODO: Remove optional entityTransform once it's implemented
       const scale = new DOMPointReadOnly(
         Math.hypot(
-          entityTransform.m11,
-          entityTransform.m12,
-          entityTransform.m13,
+          entityTransform?.m11,
+          entityTransform?.m12,
+          entityTransform?.m13,
         ),
         Math.hypot(
-          entityTransform.m21,
-          entityTransform.m22,
-          entityTransform.m23,
+          entityTransform?.m21,
+          entityTransform?.m22,
+          entityTransform?.m23,
         ),
         Math.hypot(
-          entityTransform.m31,
-          entityTransform.m32,
-          entityTransform.m33,
+          entityTransform?.m31,
+          entityTransform?.m32,
+          entityTransform?.m33,
         ),
       );
       setModelMetrics({ boundingBoxExtents, boundingBoxCenter, scale });
