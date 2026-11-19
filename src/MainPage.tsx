@@ -10,9 +10,9 @@ export default function MainPage() {
 
   return (
     <>
-      <h1 className="heading" enable-xr>
-        WebSpatial Store
-      </h1>
+      <header>
+        <h1 enable-xr>WebSpatial Store</h1>
+      </header>
       <main>
         {products.slice(0, count).map((product) => (
           <ProductCard key={product.id} product={product} />

@@ -1,9 +1,15 @@
 @import "style.css";
 
-h1 {
-  text-align: center;
-  --xr-back: 50px;
-  transform: translateZ(100px) rotateY(30deg);
+header {
+  spatial: page;
+  h1 {
+    position: relative;
+    text-align: center;
+    inset-back: 50px;
+    back: 50px;
+    --xr-back: 50px;
+    transform: translateZ(100px) rotateY(30deg);
+  }
 }
 
 main {
